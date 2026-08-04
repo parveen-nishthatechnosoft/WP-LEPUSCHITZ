@@ -143,6 +143,15 @@ function lepuschitz_scripts() {
     wp_enqueue_style('lepuschitz-style', get_template_directory_uri() . '/scss/style.css', array(), '1.2');
     wp_style_add_data('lepuschitz-style', 'rtl', 'replace');
 
+    if (is_singular('catalog')) {
+        wp_enqueue_style(
+            'lepuschitz-catalog-tools',
+            get_template_directory_uri() . '/css/catalog-tools.css',
+            array('lepuschitz-style'),
+            '1.0.0'
+        );
+    }
+
     //wp_enqueue_style('Font_Awesome', 'https://use.fontawesome.com/releases/v5.6.1/css/all.css');
     wp_enqueue_style(
         'Font_Awesome',

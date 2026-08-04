@@ -5,16 +5,25 @@ $lDebug = '';
 if (isset($_GET['debug']))
     $lDebug = '&debug=1';
 ?>
-<ul>
-    <li>
-        <a href="javascript:UploadFile()">Import catalog</a>
-        <input type="file" id="jung-file">
-        <div>
-            <progress id="progress1" value="0"></progress>
-            <div id="status1" style="min-height:20px;"></div>
+<section class="catalog-import-card" aria-labelledby="catalog-import-title">
+    <div class="catalog-import-card__intro">
+        <h2 id="catalog-import-title">JUNG-Katalog importieren</h2>
+        <p>Wählen Sie die aktuelle JUNG-Produktdatei im XLSX-Format aus.</p>
+    </div>
+    <div class="catalog-import-fields">
+        <div class="catalog-import-field">
+            <label for="jung-file">Produktdatei</label>
+            <input type="file" id="jung-file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         </div>
-    </li>
-</ul>
+    </div>
+    <div class="catalog-import-actions">
+        <button type="button" class="catalog-import-button" onclick="UploadFile()">Katalog importieren</button>
+        <div class="catalog-import-progress">
+            <progress id="progress1" value="0" max="1"></progress>
+            <div id="status1" class="catalog-import-status" aria-live="polite">Bereit für den Import.</div>
+        </div>
+    </div>
+</section>
 
 <script>
     var source = "";
@@ -24,7 +33,7 @@ if (isset($_GET['debug']))
         var lFileField = document.getElementById('jung-file');
         var lNumberOfFiles = lFileField.files.length;
         if (lNumberOfFiles !== 1) {
-            console.log("No file selected")
+            document.getElementById("status1").textContent = "Bitte wählen Sie eine XLSX-Datei aus.";
             return;
         }
 

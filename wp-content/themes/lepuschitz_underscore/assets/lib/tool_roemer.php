@@ -5,20 +5,38 @@ $lDebug = '';
 if (isset($_GET['debug']))
     $lDebug = '&debug=1';
 ?>
-<ul>
-    <li>
-        <a href="javascript:UploadFile()">Import catalog</a><br>
-        Artikel/Produkte: <input type="file" id="roemer-file_articles"><br>
-        Positionen: <input type="file" id="roemer-file_positions"><br>
-        Druckpreise/Farben: <input type="file" id="roemer-file_colors"><br>
-        Vorkosten: <input type="file" id="roemer-file_costs"><br>
-        <small>Die Datei „print_detail“ ist keine Artikel-/Produktdatei und wird von diesem Import nicht als Produktkatalog unterstützt.</small><br>
-        <div>
-            <progress id="progress1" value="0"></progress>
-            <div id="status1" style="min-height:20px;"></div>
+<section class="catalog-import-card" aria-labelledby="catalog-import-title">
+    <div class="catalog-import-card__intro">
+        <h2 id="catalog-import-title">Römer-Katalog importieren</h2>
+        <p>Für den vollständigen Katalogimport werden vier zusammengehörige XLSX-Dateien benötigt.</p>
+    </div>
+    <div class="catalog-import-fields">
+        <div class="catalog-import-field">
+            <label for="roemer-file_articles">1. Artikel und Produkte</label>
+            <input type="file" id="roemer-file_articles" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         </div>
-    </li>
-</ul>
+        <div class="catalog-import-field">
+            <label for="roemer-file_positions">2. Druckpositionen</label>
+            <input type="file" id="roemer-file_positions" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </div>
+        <div class="catalog-import-field">
+            <label for="roemer-file_colors">3. Druckpreise und Farben</label>
+            <input type="file" id="roemer-file_colors" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </div>
+        <div class="catalog-import-field">
+            <label for="roemer-file_costs">4. Vorkosten</label>
+            <input type="file" id="roemer-file_costs" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </div>
+        <p class="catalog-import-help">Die Datei „print_detail“ ist keine Artikeldatei. Verwenden Sie im ersten Feld den Römer-Produktkatalog mit Artikelnummern, Kategorien und Preisen.</p>
+    </div>
+    <div class="catalog-import-actions">
+        <button type="button" class="catalog-import-button" onclick="UploadFile()">Katalog importieren</button>
+        <div class="catalog-import-progress">
+            <progress id="progress1" value="0" max="1"></progress>
+            <div id="status1" class="catalog-import-status" aria-live="polite">Bereit für den Import.</div>
+        </div>
+    </div>
+</section>
 
 <script>
     var source = "";
@@ -27,22 +45,22 @@ if (isset($_GET['debug']))
         // Check if file is selected
         var lFileFieldArticles = document.getElementById('roemer-file_articles');
         if (lFileFieldArticles.files.length !== 1) {
-            console.log("No articles file selected")
+            document.getElementById("status1").textContent = "Bitte wählen Sie die Artikel-/Produktdatei aus.";
             return;
         }
         var lFileFieldPositions = document.getElementById('roemer-file_positions');
         if (lFileFieldPositions.files.length !== 1) {
-            console.log("No positions file selected")
+            document.getElementById("status1").textContent = "Bitte wählen Sie die Datei mit den Druckpositionen aus.";
             return;
         }
         var lFileFieldColors = document.getElementById('roemer-file_colors');
         if (lFileFieldColors.files.length !== 1) {
-            console.log("No colors file selected")
+            document.getElementById("status1").textContent = "Bitte wählen Sie die Datei mit Druckpreisen und Farben aus.";
             return;
         }
         var lFileFieldCosts = document.getElementById('roemer-file_costs');
         if (lFileFieldCosts.files.length !== 1) {
-            console.log("No costs file selected")
+            document.getElementById("status1").textContent = "Bitte wählen Sie die Datei mit den Vorkosten aus.";
             return;
         }
 
