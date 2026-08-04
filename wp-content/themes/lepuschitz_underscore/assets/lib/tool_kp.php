@@ -51,8 +51,15 @@ if (isset($_GET['debug']))
 
         // upload finished, trigger importing with the returned temp file
         source.addEventListener("load", function (e) {
-            lResponse = JSON.parse(e.currentTarget.response);
-            ImportCatalog(lResponse.FileName);
+            try {
+                var lResponse = JSON.parse(e.currentTarget.response);
+                if (e.currentTarget.status < 200 || e.currentTarget.status >= 300 || !lResponse.Success) {
+                    throw new Error(lResponse.Message || "Upload failed.");
+                }
+                ImportCatalog(lResponse.FileName);
+            } catch (lError) {
+                document.getElementById("status1").textContent = "ERROR: " + lError.message;
+            }
         });
 
         // an error is received
@@ -83,6 +90,12 @@ if (isset($_GET['debug']))
             // set progress bar and status message according to received value
             document.getElementById("progress1").value = result.progress / 100;
             document.getElementById("status1").innerHTML = result.message;
+
+            if (result.message.indexOf("ERROR: ") === 0) {
+                source.close();
+                document.getElementById("status1").textContent = result.message;
+                return;
+            }
 
             if (result.message === "TERMINATE") {
                 source.close();

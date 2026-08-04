@@ -52,6 +52,11 @@ class LRoemerCatalogReader extends LCatalogReader {
         // Open the spreadsheet
         $lXlsxReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 
+        $this->ValidateInputFile($lXlsxReader, $this->_ArticlesFileName, 'articles');
+        $this->ValidateInputFile($lXlsxReader, $this->_PositionsDataFileName, 'positions');
+        $this->ValidateInputFile($lXlsxReader, $this->_ColorsDataFileName, 'print colors');
+        $this->ValidateInputFile($lXlsxReader, $this->_CostsDataFileName, 'initial costs');
+
         // Can the costs file be read
         if ($lXlsxReader->canRead($this->_CostsDataFileName)) {
             // Load the file
@@ -97,6 +102,7 @@ class LRoemerCatalogReader extends LCatalogReader {
             // Select first sheet
             $lSheetColors = $lSpreadsheet->getSheet(0);
             $lNumberOfRows = $lSheetColors->getHighestRow();
+            $lColorHeaders = $this->BuildHeaderMap($lSheetColors, 1);
 
             $lCurrentRow = 0;
             foreach ($lSheetColors->getRowIterator() as $lRow) {
@@ -115,27 +121,47 @@ class LRoemerCatalogReader extends LCatalogReader {
                 $this->DoProgress($aProgressHandler, $lNumberOfRows, $lCurrentRow, "Reading color");
 
                 $lCells = LCatalogReader::PhpOfficeGetCellsFromRow($lRow);
+                $lTechnologyCode = trim((string)$this->HeaderValue($lCells, $lColorHeaders, ['print_type_sku']));
+                $lTechnologyName = trim((string)$this->HeaderValue($lCells, $lColorHeaders, ['print_type_title']));
+                if ($lTechnologyCode === '' || $lTechnologyName === '') {
+                    continue;
+                }
 
-                $lNewTechnology = $aCatalog->Technologies->AddTechnology($lCells[0], $lCells[1]);
+                $lNewTechnology = $aCatalog->Technologies->AddTechnology($lTechnologyCode, $lTechnologyName);
                 $lNewTechnology->CostsPerColor = 0;
-                $lNewTechnology->SetupCosts = $lCosts[$lCells[18]]->Price;
-                if (!empty($lCells[4])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[5], !empty($lCells[7]) ? $lCells[7] : 0, round($lCells[4] * $lTechnologyMarkup, 2), 0, 1);
-                }
-                if (!empty($lCells[6])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[7], !empty($lCells[9]) ? $lCells[9] : 0, round($lCells[6] * $lTechnologyMarkup, 2), 0, 1);
-                }
-                if (!empty($lCells[8])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[9], !empty($lCells[11]) ? $lCells[11] : 0, round($lCells[8] * $lTechnologyMarkup, 2), 0, 1);
-                }
-                if (!empty($lCells[10])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[11], !empty($lCells[13]) ? $lCells[13] : 0, round($lCells[10] * $lTechnologyMarkup, 2), 0, 1);
-                }
-                if (!empty($lCells[12])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[13], !empty($lCells[15]) ? $lCells[15] : 0, round($lCells[12] * $lTechnologyMarkup, 2), 0, 1);
-                }
-                if (!empty($lCells[14])) {
-                    $lNewTechnology->Ranges->AddRangeWithPrices($lCells[15], 0, round($lCells[14] * $lTechnologyMarkup, 2), 0, 1);
+
+                $lInitialCostSkus = explode(',', (string)$this->HeaderValue($lCells, $lColorHeaders, ['initial_cost_skus']));
+                $lInitialCostSku = trim($lInitialCostSkus[0]);
+                $lNewTechnology->SetupCosts = isset($lCosts[$lInitialCostSku])
+                    ? round((float)$lCosts[$lInitialCostSku]->Price * $lTechnologyMarkup, 2)
+                    : 0;
+
+                for ($lTier = 1; $lTier <= 6; $lTier++) {
+                    $lPrice = $this->Number($this->HeaderValue(
+                        $lCells,
+                        $lColorHeaders,
+                        ['branding_price_' . $lTier, 'tier_price_' . $lTier]
+                    ));
+                    $lQuantity = $this->Number($this->HeaderValue($lCells, $lColorHeaders, ['tier_amount_' . $lTier]));
+                    if ($lPrice === null || $lQuantity === null) {
+                        continue;
+                    }
+
+                    $lNextQuantity = null;
+                    for ($lNextTier = $lTier + 1; $lNextTier <= 6; $lNextTier++) {
+                        $lCandidate = $this->Number($this->HeaderValue($lCells, $lColorHeaders, ['tier_amount_' . $lNextTier]));
+                        if ($lCandidate !== null) {
+                            $lNextQuantity = (int)$lCandidate;
+                            break;
+                        }
+                    }
+                    $lNewTechnology->Ranges->AddRangeWithPrices(
+                        (int)$lQuantity,
+                        $lNextQuantity === null ? 0 : $lNextQuantity - 1,
+                        round((float)$lPrice * $lTechnologyMarkup, 2),
+                        0,
+                        1
+                    );
                 }
             }
         }
@@ -275,6 +301,80 @@ class LRoemerCatalogReader extends LCatalogReader {
                 }
             }
         }
+    }
+
+    private function ValidateInputFile($aReader, $aFileName, string $aRole) {
+        if (empty($aFileName) || !is_readable($aFileName) || !$aReader->canRead($aFileName)) {
+            throw new RuntimeException('The Römer ' . $aRole . ' workbook is missing or unreadable.');
+        }
+
+        $lSpreadsheet = $aReader->load($aFileName);
+        $lSheet = $lSpreadsheet->getSheet(0);
+        $lKnownHeaders = [];
+        for ($lRowNumber = 1; $lRowNumber <= min(5, $lSheet->getHighestDataRow()); $lRowNumber++) {
+            foreach ($lSheet->rangeToArray('A' . $lRowNumber . ':' . $lSheet->getHighestDataColumn() . $lRowNumber, null, true, false)[0] as $lValue) {
+                $lValue = trim((string)$lValue);
+                if ($lValue !== '') {
+                    $lKnownHeaders[$lValue] = true;
+                }
+            }
+        }
+        $lSpreadsheet->disconnectWorksheets();
+        unset($lSpreadsheet);
+
+        $lRequiredHeaders = [
+            'articles' => ['sku', 'name_de', 'catalog_category', 'ik_tier_price_1'],
+            'positions' => ['position_sku', 'title', 'print_type_skus'],
+            'print colors' => ['print_type_sku', 'print_type_title', 'initial_cost_skus'],
+            'initial costs' => ['sku', 'title', 'price', 'per_item'],
+        ];
+        foreach ($lRequiredHeaders[$aRole] as $lHeader) {
+            if (!isset($lKnownHeaders[$lHeader])) {
+                if ($aRole === 'articles' && isset($lKnownHeaders['position_sku'], $lKnownHeaders['print_type_sku'])) {
+                    throw new RuntimeException(
+                        'The selected Artikel file is the print-detail export. A separate Römer article/product workbook is required.'
+                    );
+                }
+                throw new RuntimeException('The selected Römer ' . $aRole . ' workbook has the wrong schema; missing column: ' . $lHeader . '.');
+            }
+        }
+    }
+
+    private function BuildHeaderMap($aSheet, int $aHeaderRow): array {
+        $lHeaders = [];
+        $lValues = $aSheet->rangeToArray(
+            'A' . $aHeaderRow . ':' . $aSheet->getHighestDataColumn() . $aHeaderRow,
+            null,
+            true,
+            false
+        )[0];
+        foreach ($lValues as $lIndex => $lValue) {
+            $lValue = trim((string)$lValue);
+            if ($lValue !== '') {
+                $lHeaders[$lValue] = $lIndex;
+            }
+        }
+        return $lHeaders;
+    }
+
+    private function HeaderValue(array $aCells, array $aHeaders, array $aAliases) {
+        foreach ($aAliases as $lAlias) {
+            if (array_key_exists($lAlias, $aHeaders)) {
+                return $aCells[$aHeaders[$lAlias]] ?? null;
+            }
+        }
+        return null;
+    }
+
+    private function Number($aValue) {
+        if (is_int($aValue) || is_float($aValue)) {
+            return $aValue;
+        }
+        $lValue = str_replace(["\xc2\xa0", ' '], '', trim((string)$aValue));
+        if (preg_match('/^-?\d+(?:[.,]\d+)?$/', $lValue) !== 1) {
+            return null;
+        }
+        return (float)str_replace(',', '.', $lValue);
     }
 }
 

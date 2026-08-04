@@ -8,10 +8,11 @@ if (isset($_GET['debug']))
 <ul>
     <li>
         <a href="javascript:UploadFile()">Import catalog</a><br>
-        Artikel: <input type="file" id="roemer-file_articles"><br>
+        Artikel/Produkte: <input type="file" id="roemer-file_articles"><br>
         Positionen: <input type="file" id="roemer-file_positions"><br>
-        Farben: <input type="file" id="roemer-file_colors"><br>
-        Kosten: <input type="file" id="roemer-file_costs"><br>
+        Druckpreise/Farben: <input type="file" id="roemer-file_colors"><br>
+        Vorkosten: <input type="file" id="roemer-file_costs"><br>
+        <small>Die Datei „print_detail“ ist keine Artikel-/Produktdatei und wird von diesem Import nicht als Produktkatalog unterstützt.</small><br>
         <div>
             <progress id="progress1" value="0"></progress>
             <div id="status1" style="min-height:20px;"></div>
@@ -71,8 +72,15 @@ if (isset($_GET['debug']))
 
         // upload finished, trigger importing with the returned temp file
         source.addEventListener("load", function (e) {
-            lResponse = JSON.parse(e.currentTarget.response);
-            ImportCatalog(lResponse.FileNameArticles, lResponse.FileNamePositions, lResponse.FileNameColors, lResponse.FileNameCosts);
+            try {
+                var lResponse = JSON.parse(e.currentTarget.response);
+                if (e.currentTarget.status < 200 || e.currentTarget.status >= 300 || !lResponse.Success) {
+                    throw new Error(lResponse.Message || "Upload failed.");
+                }
+                ImportCatalog(lResponse.FileNameArticles, lResponse.FileNamePositions, lResponse.FileNameColors, lResponse.FileNameCosts);
+            } catch (lError) {
+                document.getElementById("status1").textContent = "ERROR: " + lError.message;
+            }
         });
 
         // an error is received
@@ -107,6 +115,12 @@ if (isset($_GET['debug']))
             // set progress bar and status message according to received value
             document.getElementById("progress1").value = result.progress / 100;
             document.getElementById("status1").innerHTML = result.message;
+
+            if (result.message.indexOf("ERROR: ") === 0) {
+                source.close();
+                document.getElementById("status1").textContent = result.message;
+                return;
+            }
 
             if (result.message === "TERMINATE") {
                 source.close();

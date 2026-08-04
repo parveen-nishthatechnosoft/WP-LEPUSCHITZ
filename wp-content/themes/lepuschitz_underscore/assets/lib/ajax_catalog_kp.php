@@ -23,16 +23,41 @@ if (isset($_GET['tool'])) {
 }
 
 function UploadFile() {
-    // Check if file is given
+    header('Content-Type: application/json');
+    if (!current_user_can('administrator')) {
+        http_response_code(403);
+        echo json_encode(['Success' => false, 'Message' => 'Administrator permission is required.']);
+        return;
+    }
+    if (!isset($_FILES['xlsx']) || $_FILES['xlsx']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(['Success' => false, 'Message' => 'The XLSX upload did not complete successfully.']);
+        return;
+    }
+
     $lXlsxFile = $_FILES['xlsx']['tmp_name'];
 
-    // Save the file to temp folder
-    $lMandator = new LMandator(LMandator::KP, LMandator::KP_SCRAMBLED, LMandator::KP_TYPE);
-    $lTempFileName = $lMandator->SaveFileToTempFile($lXlsxFile);
+    // The workbook is transient processing data. Keep it in PHP's shared temp
+    // directory so WordPress upload-path settings cannot differ between requests.
+    $lTempFileName = tempnam(sys_get_temp_dir(), 'kp_import_');
+    if ($lTempFileName !== false && !move_uploaded_file($lXlsxFile, $lTempFileName)) {
+        unlink($lTempFileName);
+        $lTempFileName = false;
+    }
+
+    if ($lTempFileName === false || !is_file($lTempFileName) || filesize($lTempFileName) === 0) {
+        if (is_string($lTempFileName) && is_file($lTempFileName)) {
+            unlink($lTempFileName);
+        }
+        http_response_code(500);
+        echo json_encode(['Success' => false, 'Message' => 'The server could not store the uploaded workbook in its temporary directory.']);
+        return;
+    }
 
     $lResult = new stdClass();
     $lResult->Success = true;
-    $lResult->FileName = urlencode($lTempFileName);
+    // Return only the generated token, never an absolute server path.
+    $lResult->FileName = basename($lTempFileName);
 
     echo(json_encode($lResult));
 }
@@ -57,28 +82,51 @@ function ImportCatalog() {
         flush();
     }
 
-    // Check if file is given
-    $lXlsxFile = $_GET['tempFile'];
+    $lXlsxFile = null;
+    try {
+        if (!current_user_can('administrator')) {
+            throw new RuntimeException('Administrator permission is required.');
+        }
+        if (empty($_GET['tempFile']) || empty($_GET['id'])) {
+            throw new RuntimeException('The uploaded file or catalogue ID is missing.');
+        }
 
-    $lCatalogId = $_GET['id'];
-    $lMandator = new LMandator(LMandator::KP, LMandator::KP_SCRAMBLED, LMandator::KP_TYPE);
+        $lCatalogId = (int)$_GET['id'];
+        $lMandator = new LMandator(LMandator::KP, LMandator::KP_SCRAMBLED, LMandator::KP_TYPE);
+        $lTempFileToken = basename(rawurldecode((string)$_GET['tempFile']));
+        if (preg_match('/^kp_import_[A-Za-z0-9]+$/', $lTempFileToken) !== 1) {
+            throw new RuntimeException('The temporary import-file token is invalid. Please upload it again.');
+        }
 
-    $lCatalog = new LCatalog('KP Plattner Hauptkatalog', $lMandator, $lCatalogId);
+        $lTemporaryDirectory = realpath(sys_get_temp_dir());
+        $lXlsxFile = realpath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $lTempFileToken);
+        if (
+            $lXlsxFile === false
+            || $lTemporaryDirectory === false
+            || basename($lXlsxFile) !== $lTempFileToken
+            || realpath(dirname($lXlsxFile)) !== $lTemporaryDirectory
+        ) {
+            throw new RuntimeException('The temporary import file is invalid. Please upload it again.');
+        }
 
-    $lCatalogReader = new LKpCatalogReader($lMandator);
+        $lCatalog = new LCatalog('KP Plattner Hauptkatalog', $lMandator, $lCatalogId);
+        $lCatalogReader = new LKpCatalogReader($lMandator);
+        $lCatalogReader->LoadFromFileOrUrl($lXlsxFile, LCatalogReader::ALL);
+        $lCatalogReader->ParseData($lCatalog, 'sendMsg');
 
-    // Read the data
-    $lCatalogReader->LoadFromFileOrUrl($lXlsxFile, LCatalogReader::ALL);
+        if (count($lCatalog->Products->Products) === 0) {
+            throw new RuntimeException('No importable products were found in the workbook.');
+        }
 
-    // Parse the data
-    $lCatalogReader->ParseData($lCatalog, 'sendMsg');
-
-    // Remove temp file
-    unlink($lXlsxFile);
-
-    // Write the data
-    $lCatalogWriter = new LCatalogWriter($lMandator);
-    $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        $lCatalogWriter = new LCatalogWriter($lMandator);
+        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+    } catch (Throwable $lException) {
+        sendMsg(-1, 'ERROR: ' . $lException->getMessage(), 0);
+    } finally {
+        if ($lXlsxFile !== null && is_file($lXlsxFile)) {
+            unlink($lXlsxFile);
+        }
+    }
 }
 
 function ShowTools($aDebug) {

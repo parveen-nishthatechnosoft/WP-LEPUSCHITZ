@@ -6,246 +6,287 @@ class LKpCatalogReader extends LCatalogReader {
 
     private $_XlsxFileName = null;
 
-    /**
-     * @param string $aFileName
-     * @param string $aDataType
-     * @return mixed
-     */
     public function LoadFromFileOrUrl(string $aFileName, string $aDataType) {
-        switch ($aDataType) {
-            case $this::ALL:
-                $this->_XlsxFileName = $aFileName;
-                break;
+        if ($aDataType === self::ALL) {
+            $this->_XlsxFileName = $aFileName;
         }
     }
 
-    /**
-     * @param LCatalog $aCatalog
-     * @param null $aProgressHandler
-     * @return mixed
-     */
     public function ParseData(LCatalog $aCatalog, $aProgressHandler = null) {
-        // Increase the memory
         ini_set('memory_limit', '2048M');
-
-        $lProductMarkUp = (100 + get_field('kp_import_markup', 'option')) / 100;
-        $lTechnologyMarkup = $lProductMarkUp;
-
-        // Set time limit to run through all entries and to avoid hanging if something takes too long
         set_time_limit(0);
 
-        // Read the data
-        $this->DoProgress($aProgressHandler, 1, 0, "Reading excel file");
-        $lXlsxReader = ReaderEntityFactory::createXLSXReader();
-        $lXlsxReader->open($this->_XlsxFileName);
-        $this->DoProgress($aProgressHandler, 1, 1, "Reading finished");
+        if (empty($this->_XlsxFileName) || !is_readable($this->_XlsxFileName)) {
+            throw new RuntimeException('The KP Plattner Excel file is missing or cannot be read.');
+        }
 
-        // Get the main sheet
-        foreach ($lXlsxReader->getSheetIterator() as $lSpreadsheet) {
-            // Take the first one
+        $lProductMarkup = (100 + (float)get_field('kp_import_markup', 'option')) / 100;
+        $this->DoProgress($aProgressHandler, 1, 0, 'Reading Excel file');
+        $lReader = ReaderEntityFactory::createXLSXReader();
+        $lReader->open($this->_XlsxFileName);
+
+        foreach ($lReader->getSheetIterator() as $lSheet) {
             break;
         }
+        if (!isset($lSheet)) {
+            $lReader->close();
+            throw new RuntimeException('The KP Plattner workbook contains no worksheet.');
+        }
 
-        // Get number of rows
-        $lNumberOfRows = 0; // $lSheetData-> getHighestRow() - 1;
-        $this->DoProgress($aProgressHandler, 1, 0, "Calculating rows");
-        foreach ($lSpreadsheet->getRowIterator() as $XlsRow) {
+        $lNumberOfRows = 0;
+        foreach ($lSheet->getRowIterator() as $lUnusedRow) {
             $lNumberOfRows++;
-            if ($lNumberOfRows % 100 == 0) {
-                $this->DoProgress($aProgressHandler, 1, 0, "Calculating rows: " . $lNumberOfRows);
+        }
+        $this->DoProgress($aProgressHandler, 1, 1, 'Reading finished');
+
+        $lHeaders = [];
+        $lCurrentRow = 0;
+        foreach ($lSheet->getRowIterator() as $lXlsxRow) {
+            $lCurrentRow++;
+            $lCells = $this->CellValues($lXlsxRow);
+
+            if ($lCurrentRow === 1) {
+                $lHeaders = $this->BuildHeaderMap($lCells);
+                $this->ValidateHeaders($lHeaders);
+                continue;
+            }
+            if (isset($_GET['debug']) && $lCurrentRow >= 100) {
+                break;
+            }
+
+            $this->DoProgress($aProgressHandler, $lNumberOfRows, $lCurrentRow, 'Reading products');
+            if ($this->Value($lCells, $lHeaders, 'Kategorie') === 'Druckkosten') {
+                $this->AddTechnologyCosts($aCatalog, $lCells, $lHeaders, $lProductMarkup);
+            } else {
+                $this->AddProduct($aCatalog, $lCells, $lHeaders, $lProductMarkup);
             }
         }
 
-        // Loop by skipping the first row
-        $lCurrentRow = 0;
-        foreach ($lSpreadsheet->getRowIterator() as $XlsRow) {
-            $lCurrentRow++;
+        $lReader->close();
+    }
 
-            // Skip first row
-            if ($lCurrentRow == 1)
-                continue;
+    private function CellValues($aRow): array {
+        $lValues = [];
+        foreach ($aRow->getCells() as $lCell) {
+            $lValues[] = $lCell->getValue();
+        }
+        return $lValues;
+    }
 
-            $this->DoProgress($aProgressHandler, $lNumberOfRows, $lCurrentRow, "Reading products");
-
-            // Get the cells
-            $lCells = $XlsRow->getCells();
-
-            // Check if not "Druckkosten"
-            if ($lCells[4]->getValue() !== "Druckkosten") {
-                // Product
-
-                // Generate image file link (images are uploaded direct to the KP folder
-                $lImageFileUrl = $aCatalog->Mandator->ImageUrl . $lCells[6]->getValue();
-
-                // Get the color and do a preparse, split, color replacing
-                $lColors = $lCells[2]->getValue();
-
-                // Only first color
-                $lColors = explode('/', $lColors);
-
-                $lColor1 = $lColors[0];
-                $lColor1 = trim(str_ireplace('Chrom', 'silver', $lColor1));
-                $lColor1 = trim(str_ireplace('stainless steel', 'silver', $lColor1));
-                $lColor1 = trim(str_ireplace('Nickel', 'darkgray', $lColor1));
-
-                $lColor2 = null;
-                if (isset($lColors[1])) {
-                    $lColor2 = $lColors[1];
-                    $lColor2 = trim(str_ireplace('Chrom', 'silver', $lColor2));
-                    $lColor2 = trim(str_ireplace('stainless steel', 'silver', $lColor2));
-                    $lColor2 = trim(str_ireplace('Nickel', 'darkgray', $lColor2));
-                }
-
-                // Parse the row now
-                $lArticleNumber = $lCells[1]->getValue();
-                if (!$aCatalog->Products->ExistsProductCode($lArticleNumber)) {
-                    // Create a new product
-                    $lNewProduct = $aCatalog->Products->AddProduct($lArticleNumber, $lArticleNumber);
-                    $lNewProduct->Description = $lCells[3]->getValue();
-                    $lNewProduct->ImageUrl = $lImageFileUrl;
-                    if ($lColor2 == null)
-                        $lNewProduct->AddColorWithImage($lColor1, $lImageFileUrl, $lCells[0]->getValue()); else
-                        $lNewProduct->AddBiColorWithImage($lColor1, $lColor2, $lImageFileUrl, $lCells[0]->getValue());
-
-                    $lLastPrice = null;
-                    if (!empty($lCells[16]->getValue()))
-                        $lLastPrice = $lNewProduct->AddPrice(round($lCells[16]->getValue() * $lProductMarkUp, 2), 1, $lCells[11]->getValue() - 1);
-                    if (!empty($lCells[17]->getValue()))
-                        $lLastPrice = $lNewProduct->AddPrice(round($lCells[17]->getValue() * $lProductMarkUp, 2), $lCells[11]->getValue(), $lCells[12]->getValue() - 1);
-                    if (!empty($lCells[18]->getValue()))
-                        $lLastPrice = $lNewProduct->AddPrice(round($lCells[18]->getValue() * $lProductMarkUp, 2), $lCells[12]->getValue(), $lCells[13]->getValue() - 1);
-                    if (!empty($lCells[19]->getValue()))
-                        $lLastPrice = $lNewProduct->AddPrice(round($lCells[19]->getValue() * $lProductMarkUp, 2), $lCells[13]->getValue(), $lCells[14]->getValue() - 1);
-                    if (!empty($lCells[20]->getValue()))
-                        $lLastPrice = $lNewProduct->AddPrice(round($lCells[20]->getValue() * $lProductMarkUp, 2), $lCells[14]->getValue(), $lCells[15]->getValue() - 1);
-
-                    // Empty last to to null
-                    if ($lLastPrice != null) {
-                        $lLastPrice->To = null;
-                    }
-
-                    // Try to find the category/subcategory
-                    $lNewProduct->CategoryIdOrName = $lCells[4]->getValue();
-
-                    // Do the technology things two sided
-                    $lNewLabel = $aCatalog->Labelings->AddLabel($lNewProduct->ProductCode);
-                    $lNewPositionF = $lNewLabel->AddPosition(LPosition::FRONTSIDELABEL);
-                    $lNewPositionF->Serial = 'F';    // There is always only one position at the moment
-                    $lNewPositionR = $lNewLabel->AddPosition(LPosition::BACKSIDELABEL);
-                    $lNewPositionR->Serial = 'B';    // There is always only one position at the moment
-                    $lTechCodes = explode("/", $lCells[22]->getValue());
-                    foreach ($lTechCodes as $lTechCode) {
-                        $lNumberOfColors = LRanges::FULLCOLOR;
-
-                        switch ($lTechCode) {
-                            case "D1":
-                            case "D2":
-                                $lNewTechnologyName = "Digitaldruck";
-                                break;
-                            case "S1":
-                            case "S2":
-                                $lNewTechnologyName = "Siebdruck";
-                                $lNumberOfColors = 4;
-                                break;
-                            case "T1":
-                            case "T2":
-                                $lNewTechnologyName = "Tampondruck";
-                                $lNumberOfColors = 4;
-                                break;
-                            case "L":
-                                $lNewTechnologyName = "Lasergravur";
-                                $lNumberOfColors = 0;
-                                break;
-                            default:
-                                continue 2;
-                        }
-
-                        $lNewTechnologyF = $lNewPositionF->AddTechnology($lTechCode);
-                        $lNewTechnologyF->Name = $lNewTechnologyName;
-                        $lNewTechnologyF->MaxColors = $lNumberOfColors;
-
-                        $lNewTechnologyR = $lNewPositionR->AddTechnology($lTechCode);
-                        $lNewTechnologyR->Name = $lNewTechnologyName;
-                        $lNewTechnologyR->MaxColors = $lNumberOfColors;
-                    }
-                } else {
-                    // Add additional colors
-                    $lExistingProduct = $aCatalog->Products->GetProductByProductCode($lArticleNumber);
-                    if ($lColor2 == null) {
-                        $lExistingProduct->AddColorWithImage($lColor1, $lImageFileUrl, $lCells[0]->getValue());
-                    } else {
-                        $lExistingProduct->AddBiColorWithImage($lColor1, $lColor2, $lImageFileUrl, $lCells[0]->getValue());
-                    }
-                }
-            } else {
-                // Druckkosten
-                $lTechnologyName = $lCells[1]->getValue();
-
-                $lTechCode = "";
-                $lNumberOfColors = LRanges::FULLCOLOR;
-                switch ($lTechnologyName) {
-                    case "Digitaldruck 1":
-                        $lTechCode = "D1";
-                        break;
-                    case "Digitaldruck 2":
-                        $lTechCode = "D2";
-                        break;
-                    case "Siebdruck 1":
-                        $lTechCode = "S1";
-                        $lNumberOfColors = 4;
-                        break;
-                    case "Siebdruck 2":
-                        $lTechCode = "S2";
-                        $lNumberOfColors = 4;
-                        break;
-                    case "Tampondruck T1":
-                        $lTechCode = "T1";
-                        $lNumberOfColors = 4;
-                        break;
-                    case "Tampondruck T2":
-                        $lTechCode = "T2";
-                        $lNumberOfColors = 4;
-                        break;
-                    case "Gravurkosten":
-                        $lTechCode = "L";
-                        $lNumberOfColors = 1;
-                        break;
-                    default:
-                        continue 2;
-                }
-
-                // Ranges
-                $lRange1 = $lCells[12]->getValue();
-                $lRange2 = $lCells[13]->getValue();
-                $lRange3 = $lCells[14]->getValue();
-                $lRange4 = $lCells[15]->getValue();
-                $lRange5 = $lCells[16]->getValue();
-
-                // Range prices
-                $lPriceRange1 = $lCells[17]->getValue();
-                $lPriceRange2 = $lCells[18]->getValue();
-                $lPriceRange3 = $lCells[19]->getValue();
-                $lPriceRange4 = $lCells[20]->getValue();
-                $lPriceRange5 = $lCells[21]->getValue();
-
-                $lNewTechnology = $aCatalog->Technologies->AddTechnology($lTechCode, $lTechnologyName);
-                $lLastRangePrice = $lNewTechnology->Ranges->AddRangeWithPrices(1, $lRange1 - 1, $lPriceRange1, 0, $lNumberOfColors);
-                if (!empty($lRange2)) {
-                    $lLastRangePrice = $lNewTechnology->Ranges->AddRangeWithPrices($lRange1, $lRange2 - 1, $lPriceRange2, 0, $lNumberOfColors);
-                    if (!empty($lRange3)) {
-                        $lLastRangePrice = $lNewTechnology->Ranges->AddRangeWithPrices($lRange2, $lRange3 - 1, $lPriceRange3, 0, $lNumberOfColors);
-                        if (!empty($lRange4)) {
-                            $lLastRangePrice = $lNewTechnology->Ranges->AddRangeWithPrices($lRange3, $lRange4 - 1, $lPriceRange4, 0, $lNumberOfColors);
-                            if (!empty($lRange5)) {
-                                $lLastRangePrice = $lNewTechnology->Ranges->AddRangeWithPrices($lRange4, $lRange5 - 1, $lPriceRange5, 0, $lNumberOfColors);
-                            }
-                        }
-                    }
-                }
-
-                // Empty the last QuantityTo value
-                $lLastRangePrice->QuantityTo = null;
+    private function BuildHeaderMap(array $aCells): array {
+        $lHeaders = [];
+        foreach ($aCells as $lIndex => $lHeader) {
+            $lHeader = trim((string)$lHeader);
+            if ($lHeader !== '') {
+                $lHeaders[$lHeader] = $lIndex;
             }
+        }
+        return $lHeaders;
+    }
+
+    private function ValidateHeaders(array $aHeaders) {
+        $lRequired = ['Artikelnummer', 'Artikelname', 'Kategorie', 'Bildname', 'Staffelmenge1', 'Einkaufspreis1', 'Druckcode'];
+        foreach ($lRequired as $lHeader) {
+            if ($this->HeaderIndex($aHeaders, $lHeader) === null) {
+                throw new RuntimeException('Required KP Plattner column is missing: ' . $lHeader);
+            }
+        }
+    }
+
+    private function HeaderIndex(array $aHeaders, string $aHeader) {
+        $lAliases = [
+            'Artikelnummer' => ['Artikelnummer', 'Art-Nr'],
+            'Bildname' => ['Bildname', 'Bildname 1'],
+        ];
+        foreach ($lAliases[$aHeader] ?? [$aHeader] as $lAlias) {
+            if (array_key_exists($lAlias, $aHeaders)) {
+                return $aHeaders[$lAlias];
+            }
+        }
+        return null;
+    }
+
+    private function Value(array $aCells, array $aHeaders, string $aHeader) {
+        $lIndex = $this->HeaderIndex($aHeaders, $aHeader);
+        if ($lIndex === null) {
+            return null;
+        }
+        return $aCells[$lIndex] ?? null;
+    }
+
+    private function Number($aValue) {
+        if (is_int($aValue) || is_float($aValue)) {
+            return $aValue;
+        }
+        $lValue = str_replace(["\xc2\xa0", ' '], '', trim((string)$aValue));
+        if (preg_match('/^-?\d+(?:[.,]\d+)?$/', $lValue) !== 1) {
+            return null;
+        }
+        return (float)str_replace(',', '.', $lValue);
+    }
+
+    private function AddProduct($aCatalog, array $aCells, array $aHeaders, float $aMarkup) {
+        $lVariantNumber = trim((string)$this->Value($aCells, $aHeaders, 'Artikelnummer'));
+        $lArticleName = trim((string)$this->Value($aCells, $aHeaders, 'Artikelname'));
+        if ($lVariantNumber === '' || $lArticleName === '') {
+            return;
+        }
+
+        list($lColor1, $lColor2) = $this->ParseColors((string)$this->Value($aCells, $aHeaders, 'Feuerzeugfarbe'));
+        $lImageName = basename(trim((string)$this->Value($aCells, $aHeaders, 'Bildname')));
+        $lImageUrl = $lImageName === '' ? null : $aCatalog->Mandator->ImageUrl . rawurlencode($lImageName);
+
+        if (!$aCatalog->Products->ExistsProductCode($lArticleName)) {
+            $lProduct = $aCatalog->Products->AddProduct($lArticleName, $lArticleName);
+            $lProduct->Description = $this->Value($aCells, $aHeaders, 'Artikelbeschreibung');
+            $lProduct->CategoryIdOrName = $this->Value($aCells, $aHeaders, 'Kategorie');
+            $lProduct->ImageUrl = $lImageUrl;
+            $this->AddVariant($lProduct, $lColor1, $lColor2, $lImageUrl, $lVariantNumber);
+            $this->AddProductPrices($lProduct, $aCells, $aHeaders, $aMarkup);
+            $lProduct->MimimumQuantity = $lProduct->GetMinimumQuantity();
+            $this->AddProductLabeling($aCatalog, $lProduct, (string)$this->Value($aCells, $aHeaders, 'Druckcode'));
+        } else {
+            $lProduct = $aCatalog->Products->GetProductByProductCode($lArticleName);
+            $this->AddVariant($lProduct, $lColor1, $lColor2, $lImageUrl, $lVariantNumber);
+        }
+    }
+
+    private function ParseColors(string $aColors): array {
+        $lColors = array_map('trim', explode('/', $aColors, 2));
+        $lColor1 = $lColors[0] === '' ? LColor::NOCOLOR : $lColors[0];
+        $lColor2 = $lColors[1] ?? '';
+        foreach (['lColor1', 'lColor2'] as $lVariable) {
+            $$lVariable = trim(str_ireplace(['Chrom', 'stainless steel', 'Nickel'], ['silver', 'silver', 'darkgray'], $$lVariable));
+        }
+        return [$lColor1, $lColor2];
+    }
+
+    private function AddVariant($aProduct, string $aColor1, string $aColor2, $aImageUrl, string $aVariantNumber) {
+        if ($aColor2 === '') {
+            $aProduct->AddColorWithImage($aColor1, $aImageUrl, $aVariantNumber);
+        } else {
+            $aProduct->AddBiColorWithImage($aColor1, $aColor2, $aImageUrl, $aVariantNumber);
+        }
+    }
+
+    private function AddProductPrices($aProduct, array $aCells, array $aHeaders, float $aMarkup) {
+        $lQuantities = [];
+        $lPrices = [];
+        for ($lIndex = 1; $lIndex <= 5; $lIndex++) {
+            $lQuantityHeader = $lIndex <= 3 ? 'Staffelmenge' . $lIndex : 'Staffelmenge ' . $lIndex;
+            $lQuantities[] = $this->Value($aCells, $aHeaders, $lQuantityHeader);
+            $lPrices[] = $this->Value($aCells, $aHeaders, 'Einkaufspreis' . $lIndex);
+        }
+
+        for ($lIndex = 0; $lIndex < 5; $lIndex++) {
+            $lQuantity = $this->Number($lQuantities[$lIndex]);
+            $lPrice = $this->Number($lPrices[$lIndex]);
+            if ($lQuantity === null || $lPrice === null) {
+                continue;
+            }
+            $lNextQuantity = 0;
+            for ($lNext = $lIndex + 1; $lNext < 5; $lNext++) {
+                $lCandidate = $this->Number($lQuantities[$lNext]);
+                if ($lCandidate !== null) {
+                    $lNextQuantity = (int)$lCandidate;
+                    break;
+                }
+            }
+            $aProduct->AddPrice(
+                round((float)$lPrice * $aMarkup, 2),
+                (int)$lQuantity,
+                $lNextQuantity > 0 ? $lNextQuantity - 1 : 0
+            );
+        }
+    }
+
+    private function AddProductLabeling($aCatalog, $aProduct, string $aTechnologyCodes) {
+        $lLabel = $aCatalog->Labelings->AddLabel($aProduct->ProductCode);
+        $lFront = $lLabel->AddPosition(LPosition::FRONTSIDELABEL);
+        $lFront->Serial = 'F';
+        $lBack = $lLabel->AddPosition(LPosition::BACKSIDELABEL);
+        $lBack->Serial = 'B';
+
+        foreach (array_filter(array_map('trim', explode('/', $aTechnologyCodes))) as $lCode) {
+            $lDefinition = $this->TechnologyDefinition($lCode);
+            if ($lDefinition === null) {
+                continue;
+            }
+            foreach ([$lFront, $lBack] as $lPosition) {
+                $lTechnology = $lPosition->AddTechnology($lCode);
+                $lTechnology->Name = $lDefinition[0];
+                $lTechnology->MaxColors = $lDefinition[1];
+            }
+        }
+    }
+
+    private function TechnologyDefinition(string $aCode) {
+        switch ($aCode) {
+            case 'D1':
+            case 'D2':
+                return ['Digitaldruck', LRanges::FULLCOLOR];
+            case 'S1':
+            case 'S2':
+                return ['Siebdruck', 4];
+            case 'T1':
+            case 'T2':
+                return ['Tampondruck', 4];
+            case 'L':
+                return ['Lasergravur', 1];
+        }
+        return null;
+    }
+
+    private function AddTechnologyCosts($aCatalog, array $aCells, array $aHeaders, float $aMarkup) {
+        $lTechnologyName = trim((string)$this->Value($aCells, $aHeaders, 'Artikelname'));
+        $lMap = [
+            'Digitaldruck 1' => 'D1',
+            'Digitaldruck 2' => 'D2',
+            'Siebdruck 1' => 'S1',
+            'Siebdruck 2' => 'S2',
+            'Siebdruck 2 (DJEEP)' => 'S2',
+            'Tampondruck T1' => 'T1',
+            'Tampondruck T2' => 'T2',
+            'Gravurkosten' => 'L',
+        ];
+        if (!isset($lMap[$lTechnologyName])) {
+            return;
+        }
+
+        $lCode = $lMap[$lTechnologyName];
+        $lDefinition = $this->TechnologyDefinition($lCode);
+        $lTechnology = $aCatalog->Technologies->ExistsTechnologyCode($lCode)
+            ? $aCatalog->Technologies->GetTechnologyByTechnologyCode($lCode)
+            : $aCatalog->Technologies->AddTechnology($lCode, $lTechnologyName);
+
+        $lLastRange = null;
+        for ($lIndex = 1; $lIndex <= 5; $lIndex++) {
+            $lQuantityHeader = $lIndex <= 3 ? 'Staffelmenge' . $lIndex : 'Staffelmenge ' . $lIndex;
+            $lQuantity = $this->Number($this->Value($aCells, $aHeaders, $lQuantityHeader));
+            $lPrice = $this->Number($this->Value($aCells, $aHeaders, 'Einkaufspreis' . $lIndex));
+            if ($lQuantity === null || $lPrice === null) {
+                continue;
+            }
+
+            $lNextQuantity = 0;
+            for ($lNext = $lIndex + 1; $lNext <= 5; $lNext++) {
+                $lNextHeader = $lNext <= 3 ? 'Staffelmenge' . $lNext : 'Staffelmenge ' . $lNext;
+                $lCandidate = $this->Number($this->Value($aCells, $aHeaders, $lNextHeader));
+                if ($lCandidate !== null) {
+                    $lNextQuantity = (int)$lCandidate;
+                    break;
+                }
+            }
+            $lLastRange = $lTechnology->Ranges->AddRangeWithPrices(
+                (int)$lQuantity,
+                $lNextQuantity > 0 ? $lNextQuantity - 1 : 0,
+                round((float)$lPrice * $aMarkup, 2),
+                0,
+                $lDefinition[1]
+            );
+        }
+        if ($lLastRange !== null) {
+            $lLastRange->QuantityTo = null;
         }
     }
 }
