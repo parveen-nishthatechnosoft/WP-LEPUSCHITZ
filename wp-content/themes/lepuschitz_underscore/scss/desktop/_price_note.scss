@@ -1,0 +1,266 @@
+#PriceNoteModal {
+    #btnClose {
+        width: 30px;
+        height: unset;
+        position: absolute;
+        right: 0;
+        top: 20px;
+    }
+
+    .price_note_wrapper {
+        padding: 34px;
+
+        .price_note {
+            border: 5px solid $main_green;
+            box-sizing: border-box;
+            color: $black;
+            padding: 0 30px;
+            border-radius: 5px;
+
+            .price_toprow {
+                display: flex;
+                box-sizing: border-box;
+                justify-content: space-between;
+                margin: 20px 0;
+
+
+                .price_logo {
+                    width: 280px;
+
+                    img {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .price_productname {
+                text-align: center;
+                text-transform: uppercase;
+
+                h2 {
+                    font-size: 20px;
+                }
+            }
+
+            .price_productsmalldesc {
+                text-align: center;
+            }
+
+            .price_productdesc {
+                margin: 0 30px;
+                text-align: center;
+            }
+
+            .price_productinfo {
+                display: grid;
+                justify-content: center;
+
+                .price_productgallery {
+                    width: 200px;
+                    height: 200px;
+
+                    img {
+                        object-fit: contain;
+                        width: 100%;
+                        max-height: 100%;
+                    }
+                }
+
+                .price_productdetails {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    column-gap: 40px;
+                }
+            }
+
+            .price_calculation {
+                display: flex;
+                justify-content: space-evenly;
+                margin: 30px;
+                border: 1px solid $footer_grey;
+            }
+
+            .price_informations {
+                display: grid;
+                justify-content: center;
+                font-size: 13px;
+
+                a {
+                    color: $black;
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        padding: unset;
+                    }
+
+                    .biggermargin {
+                        margin-right: 17px;
+                    }
+
+                    i {
+                        font-size: 25px;
+                        margin-right: 10px;
+                        color: $main_purple;
+                    }
+                }
+            }
+
+            .price_headnote {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+
+                h2 {
+                    margin-right: 10px;
+                    padding-bottom: unset;
+                }
+
+                p {
+                    padding: unset;
+                    line-height: unset;
+                }
+
+                #date {
+                    margin-left: 5px;
+                }
+            }
+
+            hr {
+                margin: 20px 0;
+                background: black;
+            }
+
+            #calculation {
+
+                #priceNotePreview {
+                    width: 400px;
+                }
+
+                margin-bottom: 20px;
+                background: rgba(132, 189, 0, 0.2);
+                border-radius: 10px;
+                padding: 20px;
+                display: grid;
+                justify-content: center;
+
+                .priceNote {
+                }
+            }
+
+            #date {
+                text-align: right;
+            }
+
+            h2 {
+                text-align: center;
+                font-size: 25px;
+                color: $black;
+                text-transform: uppercase;
+            }
+
+            .price_bold {
+                font-weight: bold;
+            }
+        }
+
+        .price_download {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+
+        .price_download a {
+            background: #84BD00;
+            color: #fff;
+            text-align: center;
+            line-height: 17px;
+            min-width: 110px;
+            width: fit-content;
+            padding: 10px 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+
+            p {
+                line-height: unset;
+                padding: unset;
+            }
+
+            i {
+                font-size: 23px;
+            }
+        }
+    }
+
+}
+
+
+// 404 page
+.error-404 {
+    .mainbox {
+        background-color: #23282D;
+        margin: auto;
+        height: 400px;
+        width: 600px;
+        position: relative;
+        color: $white;
+
+        .err {
+            color: #ffffff;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 11rem;
+            position: absolute;
+            left: 20%;
+            top: 8%;
+        }
+
+        .far {
+            position: absolute;
+            font-size: 8.5rem;
+            left: 42%;
+            top: 15%;
+            color: #ffffff;
+        }
+
+        .err2 {
+            color: #ffffff;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 11rem;
+            position: absolute;
+            left: 68%;
+            top: 8%;
+        }
+
+        .msg {
+            text-align: center;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 1.6rem;
+            position: absolute;
+            left: 16%;
+            top: 57%;
+            width: 75%;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.grecaptcha-badge {
+    display: none;
+}
+
+.hideCalculation {
+    display: grid;
+    margin: 0px auto;
+    margin-top: 15px;
+    width: 100px;
+    background: $main_green;
+    color: $white;
+}

@@ -1,0 +1,299 @@
+$site_width: 100%;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.desktop {
+  display: none;
+}
+
+.mobi {
+  display: block;
+}
+html {
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  background-color: $main_grey;
+  font-family: arial, sans-serif;
+  overflow-x: hidden;
+}
+
+.clear-both {
+  clear: both;
+}
+
+a {
+  color: $main_purple;
+  text-decoration: none;
+}
+
+#container {
+  margin: 0;
+  width: $site_width;
+}
+
+.mobi-text {
+  font-size: 14px;
+  color: $text_grey;
+}
+
+.mobi-text-center {
+  text-align: center;
+}
+
+.mobi-text-left {
+  text-align: left;
+}
+
+.mobi-text-right {
+  text-align: right;
+}
+
+.mobi-text-justify {
+  text-align: justify;
+}
+
+.padding-top-0 {
+  padding-top: 0 !important;
+}
+
+.padding-left-right {
+  padding: 0 1em;
+}
+
+.margin-right-0 {
+  margin-right: 0 !important;
+}
+
+.phone {
+  float: right;
+  font-size: 20px;
+  line-height: 60px;
+}
+
+h1, h2, h3, h4 {
+  @extend .mobi-text;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 20px;
+
+  span.bold {
+    color: $main_green;
+  }
+}
+
+h2 {
+  font-size: 14px;
+  font-weight: 300;
+  padding-bottom: 24px;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.banners {
+  .mobi-text {
+    font-weight: normal;
+  }
+
+  h2 {
+    color: $main_purple;
+    font-weight: 600;
+    padding-bottom: 15px;
+  }
+}
+
+.left-and-right {
+
+}
+
+.right-column {
+
+}
+
+.left-column {
+  width: 305px;
+  min-height: 300px;
+  float: left;
+  margin-right: 20px;
+
+  h3 {
+    font-size: 18px;
+    padding-bottom: 4px;
+    font-weight: 300;
+  }
+
+  ul {
+    list-style: none;
+    padding-bottom: 20px;
+    margin: 0;
+  }
+
+  .phone {
+    float: none;
+    line-height: 25px;
+  }
+
+  ul > li {
+    padding-bottom: 2px;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+p {
+  padding: 0 0 15px 0;
+  line-height: 1.5em;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+nav, .main-nav-container, .menu-nav {
+  z-index: 3000;
+}
+
+nav, .container, .inner {
+  width: $site_width;
+  margin: 0 auto;
+  clear: both;
+}
+
+.logo {
+  clear: both;
+  display: block;
+  padding: 0 0 10px 0;
+  float: left;
+  z-index: 30000;
+
+  img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+}
+
+.mobi-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+}
+.mobi-btn-default {
+  color: #fff;
+  background-color: #82bb00;
+  border-color: #82bb00;
+}
+.mobi-btn.focus, .mobi-btn:focus, .mobi-btn:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.mobi-btn-default.focus, .mobi-btn-default:focus {
+  color: #fff;
+  background-color: #6d9a06;
+  border-color: #6d9a06;
+}
+.mobi-btn-default:hover {
+  color: #fff;
+  background-color: #6d9a06;
+  border-color: #6d9a06;
+}
+
+.article {
+  width: $site_width;
+  margin: 0 auto;
+}
+
+.area-center {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.breadcrumbs {
+  min-height: 20px;
+  background: none;
+  padding: 1em;
+  font-weight: 600;
+  font-size: 13px;
+
+  .breadbcrumb-green {
+    color: $main_green;
+
+    a {
+      color: $main_green;
+    }
+  }
+
+  .breadcrumb-purple {
+    color: $main_purple;
+
+    a {
+      color: $main_purple;
+    }
+  }
+
+  a {
+    display: inline-block;
+    line-height: 20px;
+    padding: 0 5px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+div.banners {
+  width: $site_width;
+  min-height: 250px;
+
+  .banner-left {
+    display : flex;
+    align-items : center;
+    justify-content: center;
+
+    height: 225px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    @extend .mobi-text;
+    font-weight: 600;
+    font-size: 55px;
+  }
+
+  .banner-right {
+    padding: 1em 1em 0 0.5em;
+  }
+}
+.bottomtext{
+  h2{
+    font-size: 20px;
+    color: $main_purple;
+  }
+}

@@ -1,0 +1,147 @@
+nav .main-nav-container .menu-nav {
+  z-index: 3000;
+}
+
+.nav-container {
+  position: relative;
+}
+
+.main-logo {
+  width: 250px;
+
+  img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+}
+
+.main-nav-container {
+  width: 890px;
+  float: right;
+  background: $main_grey;
+  font-size: 16px;
+}
+
+.menu-nav > ul {
+  margin: 0 auto;
+  width: 100%;
+  list-style: none;
+  position: relative;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.menu-nav > ul > li {
+  display: inline-block;
+  background: $main_grey;
+  transition: background 0.15s;
+
+  a {
+    text-decoration: none;
+    padding: 1.5em 3em 1.5em 1.5em;
+    display: block;
+    color: $text_grey;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.active {
+  background: $white;
+  color: $main_purple !important;
+}
+
+.menu-nav > ul > li > ul {
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  z-index: 99999;
+  left: 0;
+  list-style: none;
+  box-sizing: border-box;
+  border-bottom: 5px solid $main_purple;
+  text-align: left;
+
+  &.product-nav {
+    padding: 20px;
+  }
+}
+
+.menu-nav > ul > li > ul.ddRegular {
+  width: 250px;
+  left: auto;
+  border-bottom: 5px solid $main_purple;
+}
+
+.menu-nav > ul > li > ul.ddRegular > li {
+  width: 100%;
+  min-height: 0;
+
+  a {
+    padding: 0.7em 0 0.7em 1.5em;
+    width: 229px;
+    display: block;
+    color: $main_purple;
+    border: none;
+
+    &:hover {
+      background: $main_grey;
+    }
+  }
+}
+
+.menu-nav > ul > li > ul > li {
+  margin: 0;
+  padding-bottom: 0;
+  list-style: none;
+  width: 25%;
+  min-height: 150px;
+  background: none;
+  float: left;
+  font-size: 14px;
+
+  a {
+    padding: 0.2em 0;
+    width: 95%;
+    display: block;
+    border-bottom: 1px solid #ccc;
+    color: $main_purple;
+
+    &:hover {
+      background: rgba(140,24,155,0.1);
+    }
+  }
+}
+
+.menu-nav > ul > li > ul > li > ul {
+  display: block;
+  margin: 10px 0 15px 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+.menu-nav > ul > li > ul > li > ul > li {
+  float: left;
+  width: 100%;
+
+  a {
+    @extend .text;
+    border: 0;
+
+    &:hover {
+      background: $main_grey;
+      color: $main_purple;
+    }
+  }
+
+  a.mehr {
+    color: $main_purple !important;
+
+    &:hover {
+      background: $main_grey !important;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+header {
+  width: 100%;
+  background-color: $footer_grey;
+  color: $white;
+  float: left;
+  height: 60px;
+  margin-bottom: 10px;
+  border-bottom: 14px solid $main_purple;
+
+  .more-info {
+    display: block;
+    background: $footer_grey;
+    float: right;
+    width: 385px;
+    height: 60px;
+
+    .hover-highlight {
+      float: right;
+      padding: 0 35px 0 35px;
+      line-height: 60px;
+      color: $white;
+      transition: background 0.15s;
+    }
+
+    .hover-underline {
+      float: right;
+      padding-left: 5px;
+      font-size: 19px;
+      line-height: 60px;
+      color: $white;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

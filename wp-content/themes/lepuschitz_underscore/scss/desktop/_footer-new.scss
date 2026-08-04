@@ -1,0 +1,105 @@
+footer {
+  color: white;
+  box-sizing: border-box;
+  clear: both;
+  border-top: 9px solid $main_purple;
+  background-color: $footer_grey;
+  margin-top: 50px;
+  position: relative;
+}
+
+.footer-container {
+  width: $site_width;
+  box-sizing: border-box;
+  padding: 40px 0;
+  margin: 0 auto;
+  min-height: 350px;
+  position: relative;
+
+  &:before {
+    display: none;
+    content:'';
+    width: 0;
+    height: 0;
+    transform: rotate(360deg);
+    border-style: solid;
+    border-width: 0 27.5px 30px 27.5px;
+    border-color: transparent transparent $main_purple transparent;
+    position: absolute;
+    top: -38px;
+    margin-left: 50%;
+    left: -27.5px;
+  }
+
+  h1 {
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+
+  a {
+    color: $white;
+    line-height: 1.6em;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 14px;
+  }
+
+  .social-icon {
+    margin-right: 10px;
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    img {
+      width: 47px;
+      height: 47px;
+    }
+  }
+
+  .footer-contact {
+    img {
+      height: 44px;
+      width: 34px;
+      margin-right: 10px;
+      float: left;
+    }
+
+    p {
+      padding-bottom: 15px;
+      line-height: 1.5em;
+    }
+  }
+
+  hr {
+    display: block;
+    box-sizing: content-box;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #B2B2B2;
+    padding-bottom: 15px;
+    width: 75%;
+    margin: 0 auto;
+  }
+
+  .footer-menu {
+    margin-bottom: 20px;
+    height: 127.5px;
+  }
+}
+
+.footer-part {
+  box-sizing: border-box;
+  padding-right: 12px;
+  width: 25%;
+  float: left;
+}

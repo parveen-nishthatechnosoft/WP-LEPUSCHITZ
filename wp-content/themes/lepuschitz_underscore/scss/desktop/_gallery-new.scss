@@ -1,0 +1,161 @@
+//==========================
+//  * Gallery dimensions *
+//==========================
+
+$gallery_width: 190px;
+$gallery_height: 200px;
+$gallery_deal_height: 224px;
+
+//=============
+//  * Style *
+//=============
+
+.gallery {
+  width: 100%;
+  float: left;
+  margin-bottom: 40px;
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  .gallery-image {
+    height: $gallery_height - 60px;
+    background-color: $white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-bottom: 5px;
+    border: 5px solid $main_green;
+    border-radius: 2px;
+  }
+}
+
+.our-qualities {
+  width: fit-content;
+  height: 165px;
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: repeat(5,1fr);
+}
+
+.gallery-element {
+  display: block;
+  width: $gallery_width;
+  height: 100%;
+  overflow: hidden;
+  float: left;
+  margin: 0 18px 18px 0;
+  background: none;
+  text-align: center;
+  position: relative;
+
+  &.fourth-category {
+    margin-right: 0;
+
+    &:hover {
+      margin-right: -24px;
+    }
+  }
+
+  &:hover {
+    padding: 19px 24px 10px 19px;
+    margin: -19px -6px 8px -19px;
+
+    .gallery-image {
+      z-index: 999999999;
+      transform: scale(1.1);
+    }
+
+    .deal-percent {
+      z-index: 999999;
+      transform: translateX(12px) translateY(12px);
+    }
+
+    .deal {
+      z-index: 999999;
+      bottom: 10px;
+      right: 24px;
+    }
+  }
+
+  span {
+    left: 0;
+    width: 100%;
+    color: $black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+.gallery-quality {
+  display: block;
+  width: $gallery_width;
+  height: $gallery_height;
+  overflow: hidden;
+  float: left;
+  margin: 0 18px 18px 0;
+  text-align: center;
+  position: relative;
+
+  &.fourth-category {
+    margin-right: 0;
+  }
+
+  span {
+    display : flex;
+    align-items : center;
+    justify-content: center;
+    padding-top: 10px;
+  }
+
+  .gallery-image {
+    margin-bottom: 0;
+  }
+}
+
+.best-deals {
+  .gallery-element {
+    height: $gallery_deal_height;
+  }
+
+  .deal-percent {
+    background: $main_green;
+    color: $white;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    padding-top: 7px;
+    position: absolute;
+    width: 75px;
+    height: 25px;
+    top: 0;
+    left: 0;
+  }
+
+  span {
+    //margin-top: 5px;
+  }
+
+  .deal {
+    font-size: 14px;
+    text-align: right;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    b {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    i {
+      font-size: 14px;
+      font-style: italic;
+      font-weight: 100;
+    }
+  }
+}

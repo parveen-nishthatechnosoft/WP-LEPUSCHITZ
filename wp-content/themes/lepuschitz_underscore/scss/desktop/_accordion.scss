@@ -1,0 +1,87 @@
+.accordion, .accordion-element {
+  background-color: $main_grey;
+  color: $text_grey;
+  cursor: pointer;
+  padding-left: 18px;
+  padding-right: 18px;
+  width: 305px;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 14px;
+  transition: 0.15s;
+
+  a {
+    box-sizing: border-box;
+    color: #4D4D4D;
+    padding: 18px;
+    display: inline-block;
+    width: 100%;
+    height: 50px;
+
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+}
+
+.accordion-title {
+  color: $main_purple;
+  font-weight: 600 !important;
+}
+
+.accordion {
+  border-left: 5px solid $footer_grey;
+
+  &:after {
+    content: url("https://www.lepuschitz-promotion.at/fileadmin/site/img/arrow-down.png");
+    color: $white;
+    font-weight: 600;
+    float: right;
+    margin-left: 5px;
+  }
+}
+
+.accordion-active:after {
+  content: "\2212";
+}
+
+.accordion-element {
+  margin-left: 15px;
+  width: 285px;
+  border-left: 5px solid $main_green;
+}
+
+.accordion-active, .accordion:hover, .accordion-element:hover {
+  background-color: $main_green;
+  color: $white;
+
+  a {
+    color: $white;
+  }
+}
+
+.accordion-panel {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.15s ease-out;
+}
+
+.accordion_faq {
+  .accordion {
+    padding: 18px;
+    width: 572px;
+    font-size: 16px;
+  }
+
+  .accordion-panel {
+    p {
+      @extend .text;
+      padding: 20px;
+      text-align: justify;
+      font-size: 14px;
+    }
+  }
+}

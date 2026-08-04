@@ -1,0 +1,63 @@
+.accordion, .mobi-accordion, .mobi-accordion-parent, .accordion-link, .accordion-element {
+  background-color: $main_purple;
+  color: $white;
+  cursor: pointer;
+  padding: 18px;
+  width: 305px;
+  border: none;
+  text-align: right;
+  outline: none;
+  font-size: 14px;
+  transition: 0.15s;
+}
+
+.accordion, .mobi-accordion, .mobi-accordion-parent, .accordion-link {
+  border-right: 5px solid $main_green;
+
+  &:before {
+    color: $white;
+    font-weight: 600;
+    float: right;
+    margin-left: 5px;
+  }
+}
+
+.accordion-active:before {
+  content: "\2212";
+}
+
+.accordion-element {
+  margin-left: 20px;
+  width: 285px;
+}
+
+.accordion-active, .accordion:hover, .accordion-element:hover {
+  background-color: $main_green;
+  color: $white;
+
+  a {
+    color: $white;
+  }
+}
+
+.accordion-panel {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.15s ease-out;
+
+  a {
+    color: $white;
+
+    &:hover {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+}
+
+.accordion-link {
+  a {
+    color: $white;
+  }
+}

@@ -1,0 +1,46 @@
+.search-form .form-control {
+  border: none !important;
+}
+
+.search-form {
+  width: 450px;
+  float: left;
+  margin-top: 13px;
+
+  label span {
+    display: none;
+  }
+
+  label .search-field {
+    display: block;
+    width: 260px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $text_light_grey;
+    background-color: $white;
+    background-image: none;
+    border: 1px solid transparent;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    float: left;
+    transition: box-shadow ease-in-out .15s;
+
+    &:focus {
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.85), 0 0 8px rgba(139,23,155,.7);
+    }
+  }
+
+  .search-submit {
+    width: 40px;
+    height: 35px;
+    border: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: $main_green url("https://www.lepuschitz-promotion.at/fileadmin/site/img/icon-search.png") 50% 50% no-repeat;
+    text-indent: -9999em;
+    float: left;
+    margin-right: 20px;
+  }
+}

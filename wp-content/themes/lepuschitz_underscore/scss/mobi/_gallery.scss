@@ -1,0 +1,133 @@
+//==========================
+//  * Gallery dimensions *
+//==========================
+
+$gallery_width: 47.5%;
+$gallery_height: 200px;
+$gallery_deal_height: 230px;
+
+//=============
+//  * Style *
+//=============
+
+.gallery {
+  width: 100%;
+  float: left;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .gallery-image {
+    height: $gallery_height - 60px;
+    background-color: $white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-bottom: 5px;
+    border: 5px solid $main_green;
+    border-radius: 2px;
+  }
+}
+
+.our-qualities {
+  width: fit-content;
+  height: fit-content;
+  overflow: hidden;
+}
+
+.gallery-element {
+  display: block;
+  overflow: hidden;
+  float: left;
+  margin: 0 5% 18px 0;
+  background: none;
+  text-align: center;
+  position: relative;
+
+  &.fourth-category {
+    margin-right: 0;
+  }
+
+  &.margin-right-0 {
+    margin-right: 0;
+  }
+
+  span {
+    left: 0;
+    width: 100%;
+    color: $black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+.gallery-quality {
+  display: block;
+  height: 190px;
+  overflow: hidden;
+  float: left;
+  margin: 0 5% 18px 0;
+  text-align: center;
+  position: relative;
+
+  &.fourth-category {
+    margin-right: 0;
+  }
+
+  span {
+    color: $black;
+    display : flex;
+    align-items : center;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .gallery-image {
+    margin-bottom: 0;
+  }
+}
+
+.best-deals {
+  .gallery-element {
+    height: $gallery_deal_height;
+  }
+
+  .deal-percent {
+    background: $main_green;
+    color: $white;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    padding-top: 7px;
+    position: absolute;
+    width: 75px;
+    height: 25px;
+    top: 0;
+    left: 0;
+  }
+
+  .deal {
+    font-size: 14px;
+    text-align: right;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    b {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    i {
+      font-size: 14px;
+      font-style: italic;
+      font-weight: 100;
+    }
+  }
+}

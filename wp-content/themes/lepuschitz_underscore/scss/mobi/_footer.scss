@@ -1,0 +1,101 @@
+footer {
+  color: white;
+  box-sizing: border-box;
+  clear: both;
+  background-color: $footer_grey;
+  margin-top: 50px;
+  position: relative;
+  padding: 1em;
+  height: 667px;
+}
+
+.footer-container {
+  width: $site_width;
+  box-sizing: border-box;
+  padding: 40px 0;
+  margin: 0 auto;
+  min-height: 350px;
+  position: relative;
+
+  h1 {
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+
+  a {
+    color: $white;
+    line-height: 1.6em;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 14px;
+  }
+
+  .social-icon {
+    margin-right: 10px;
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    img {
+      width: 47px;
+      height: 47px;
+    }
+  }
+
+  .footer-contact {
+    img {
+      height: 44px;
+      width: 34px;
+      margin-right: 10px;
+      float: left;
+    }
+
+    p {
+      padding-bottom: 15px;
+      line-height: 1.5em;
+    }
+  }
+
+  hr {
+    display: block;
+    box-sizing: content-box;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #B2B2B2;
+    padding-bottom: 15px;
+    width: 75%;
+    margin: 0 auto;
+  }
+
+  .footer-menu {
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+}
+
+.footer-part {
+  box-sizing: border-box;
+  padding-right: 12px;
+  width: 50%;
+  height: 150px;
+  float: left;
+}
+
+img.wko {
+  position: absolute;
+  z-index: 999999;
+  right: 125px;
+  bottom: 35px;
+  height: 125px;
+  width: 125px;
+}

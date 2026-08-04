@@ -1,0 +1,2784 @@
+/*!
+Theme Name: lepuschitz-underscore
+Theme URI: http://underscores.me/
+Author: Underscores.me
+Author URI: http://underscores.me/
+Description: Description
+Version: 1.0.0
+Tested up to: 5.4
+Requires PHP: 5.6
+License: GNU General Public License v2 or later
+License URI: LICENSE
+Text Domain: lepuschitz
+Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+*/
+@media screen and (max-width: 768px) {
+  /* line 1, ../scss/mobi/_css_reset.scss */
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed,
+  figure, figcaption, footer, header, hgroup,
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  /* HTML5 display-role reset for older browsers */
+  /* line 22, ../scss/mobi/_css_reset.scss */
+  article, aside, details, figcaption, figure,
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+
+  /* line 26, ../scss/mobi/_css_reset.scss */
+  body {
+    line-height: 1;
+  }
+
+  /* line 29, ../scss/mobi/_css_reset.scss */
+  ol, ul {
+    list-style: none;
+  }
+
+  /* line 32, ../scss/mobi/_css_reset.scss */
+  blockquote, q {
+    quotes: none;
+  }
+
+  /* line 35, ../scss/mobi/_css_reset.scss */
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+
+  /* line 40, ../scss/mobi/_css_reset.scss */
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  /* line 3, ../scss/mobi/_general.scss */
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* line 8, ../scss/mobi/_general.scss */
+  .desktop {
+    display: none;
+  }
+
+  /* line 12, ../scss/mobi/_general.scss */
+  .mobi {
+    display: block;
+  }
+
+  /* line 15, ../scss/mobi/_general.scss */
+  html {
+    overflow-x: hidden;
+  }
+
+  /* line 19, ../scss/mobi/_general.scss */
+  body {
+    position: relative;
+    background-color: #F7F7F7;
+    font-family: arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* line 26, ../scss/mobi/_general.scss */
+  .clear-both {
+    clear: both;
+  }
+
+  /* line 30, ../scss/mobi/_general.scss */
+  a {
+    color: #BB29BB;
+    text-decoration: none;
+  }
+
+  /* line 35, ../scss/mobi/_general.scss */
+  #container {
+    margin: 0;
+    width: 100%;
+  }
+
+  /* line 40, ../scss/mobi/_general.scss */
+  .mobi-text, h1, h2, h3, h4, div.banners .banner-left {
+    font-size: 14px;
+    color: #4D4D4D;
+  }
+
+  /* line 45, ../scss/mobi/_general.scss */
+  .mobi-text-center {
+    text-align: center;
+  }
+
+  /* line 49, ../scss/mobi/_general.scss */
+  .mobi-text-left {
+    text-align: left;
+  }
+
+  /* line 53, ../scss/mobi/_general.scss */
+  .mobi-text-right {
+    text-align: right;
+  }
+
+  /* line 57, ../scss/mobi/_general.scss */
+  .mobi-text-justify {
+    text-align: justify;
+  }
+
+  /* line 61, ../scss/mobi/_general.scss */
+  .padding-top-0 {
+    padding-top: 0 !important;
+  }
+
+  /* line 65, ../scss/mobi/_general.scss */
+  .padding-left-right {
+    padding: 0 1em;
+  }
+
+  /* line 69, ../scss/mobi/_general.scss */
+  .margin-right-0 {
+    margin-right: 0 !important;
+  }
+
+  /* line 73, ../scss/mobi/_general.scss */
+  .phone {
+    float: right;
+    font-size: 20px;
+    line-height: 60px;
+  }
+
+  /* line 83, ../scss/mobi/_general.scss */
+  h1 {
+    font-weight: 600;
+    font-size: 20px;
+  }
+  /* line 87, ../scss/mobi/_general.scss */
+  h1 span.bold {
+    color: #84BD00;
+  }
+
+  /* line 92, ../scss/mobi/_general.scss */
+  h2 {
+    font-size: 14px;
+    font-weight: 300;
+    padding-bottom: 24px;
+  }
+
+  /* line 98, ../scss/mobi/_general.scss */
+  h3 {
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  /* line 104, ../scss/mobi/_general.scss */
+  .banners .mobi-text, .banners h1, .banners h2, .banners h3, .banners h4, div.banners .banner-left {
+    font-weight: normal;
+  }
+  /* line 108, ../scss/mobi/_general.scss */
+  .banners h2 {
+    color: #BB29BB;
+    font-weight: 600;
+    padding-bottom: 15px;
+  }
+
+  /* line 123, ../scss/mobi/_general.scss */
+  .left-column {
+    width: 305px;
+    min-height: 300px;
+    float: left;
+    margin-right: 20px;
+  }
+  /* line 129, ../scss/mobi/_general.scss */
+  .left-column h3 {
+    font-size: 18px;
+    padding-bottom: 4px;
+    font-weight: 300;
+  }
+  /* line 135, ../scss/mobi/_general.scss */
+  .left-column ul {
+    list-style: none;
+    padding-bottom: 20px;
+    margin: 0;
+  }
+  /* line 141, ../scss/mobi/_general.scss */
+  .left-column .phone {
+    float: none;
+    line-height: 25px;
+  }
+  /* line 146, ../scss/mobi/_general.scss */
+  .left-column ul > li {
+    padding-bottom: 2px;
+  }
+  /* line 150, ../scss/mobi/_general.scss */
+  .left-column a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 155, ../scss/mobi/_general.scss */
+  p {
+    padding: 0 0 15px 0;
+    line-height: 1.5em;
+  }
+
+  /* line 160, ../scss/mobi/_general.scss */
+  .left {
+    float: left;
+  }
+
+  /* line 164, ../scss/mobi/_general.scss */
+  .right {
+    float: right;
+  }
+
+  /* line 168, ../scss/mobi/_general.scss */
+  nav, .main-nav-container, .menu-nav {
+    z-index: 3000;
+  }
+
+  /* line 172, ../scss/mobi/_general.scss */
+  nav, .container, .inner {
+    width: 100%;
+    margin: 0 auto;
+    clear: both;
+  }
+
+  /* line 178, ../scss/mobi/_general.scss */
+  .logo {
+    clear: both;
+    display: block;
+    padding: 0 0 10px 0;
+    float: left;
+    z-index: 30000;
+  }
+  /* line 185, ../scss/mobi/_general.scss */
+  .logo img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  /* line 192, ../scss/mobi/_general.scss */
+  .mobi-btn, .contact-form form .form-row .form-submit input {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+  }
+
+  /* line 207, ../scss/mobi/_general.scss */
+  .mobi-btn-default, .contact-form form .form-row .form-submit input {
+    color: #fff;
+    background-color: #82bb00;
+    border-color: #82bb00;
+  }
+
+  /* line 212, ../scss/mobi/_general.scss */
+  .mobi-btn.focus, .contact-form form .form-row .form-submit input.focus, .mobi-btn:focus, .contact-form form .form-row .form-submit input:focus, .mobi-btn:hover, .contact-form form .form-row .form-submit input:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* line 216, ../scss/mobi/_general.scss */
+  .mobi-btn-default.focus, .contact-form form .form-row .form-submit input.focus, .mobi-btn-default:focus, .contact-form form .form-row .form-submit input:focus {
+    color: #fff;
+    background-color: #6d9a06;
+    border-color: #6d9a06;
+  }
+
+  /* line 221, ../scss/mobi/_general.scss */
+  .mobi-btn-default:hover, .contact-form form .form-row .form-submit input:hover {
+    color: #fff;
+    background-color: #6d9a06;
+    border-color: #6d9a06;
+  }
+
+  /* line 227, ../scss/mobi/_general.scss */
+  .article {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* line 232, ../scss/mobi/_general.scss */
+  .area-center {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  /* line 237, ../scss/mobi/_general.scss */
+  .breadcrumbs {
+    min-height: 20px;
+    background: none;
+    padding: 1em;
+    font-weight: 600;
+    font-size: 9px;
+  }
+  /* line 244, ../scss/mobi/_general.scss */
+  .breadcrumbs .breadbcrumb-green {
+    color: #84BD00;
+  }
+  /* line 247, ../scss/mobi/_general.scss */
+  .breadcrumbs .breadbcrumb-green a {
+    color: #84BD00;
+  }
+  /* line 252, ../scss/mobi/_general.scss */
+  .breadcrumbs .breadcrumb-purple {
+    color: #BB29BB;
+  }
+  /* line 255, ../scss/mobi/_general.scss */
+  .breadcrumbs .breadcrumb-purple a {
+    color: #BB29BB;
+  }
+  /* line 260, ../scss/mobi/_general.scss */
+  .breadcrumbs a {
+    display: inline-block;
+    line-height: 20px;
+    padding: 0 5px;
+  }
+  /* line 265, ../scss/mobi/_general.scss */
+  .breadcrumbs a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 271, ../scss/mobi/_general.scss */
+  div.banners {
+    width: 100%;
+    min-height: 250px;
+  }
+  /* line 275, ../scss/mobi/_general.scss */
+  div.banners .banner-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 225px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-weight: 600;
+    font-size: 55px;
+  }
+  /* line 290, ../scss/mobi/_general.scss */
+  div.banners .banner-right {
+    padding: 1em 1em 0 0.5em;
+  }
+
+  /* line 1, ../scss/mobi/_header.scss */
+  .mobi-header {
+    min-height: 60px;
+    background: #fff;
+    color: #4D4D4D;
+    padding: 5px;
+  }
+
+  /* line 8, ../scss/mobi/_header.scss */
+  .burger {
+    margin: 5px 5px 0 0;
+    float: right;
+    width: 30px;
+    height: 30px;
+    border: 5px solid #BB29BB;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  /* line 17, ../scss/mobi/_header.scss */
+  .burger div {
+    min-height: 5px;
+    min-width: 100%;
+    background: #BB29BB;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+  }
+  /* line 24, ../scss/mobi/_header.scss */
+  .burger div:first-child {
+    margin-top: 2.5px;
+  }
+  /* line 28, ../scss/mobi/_header.scss */
+  .burger div:last-child {
+    margin-bottom: 2.5px;
+  }
+
+  /* line 34, ../scss/mobi/_header.scss */
+  .toggle .line-1 {
+    transform: rotate(-45deg) translate(-7px, 6px);
+  }
+
+  /* line 38, ../scss/mobi/_header.scss */
+  .toggle .line-2 {
+    opacity: 0;
+  }
+
+  /* line 42, ../scss/mobi/_header.scss */
+  .toggle .line-3 {
+    transform: rotate(45deg) translate(-8px, -7px);
+  }
+
+  /* line 1, ../scss/mobi/_menu_navigation.scss */
+  * {
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  /* line 6, ../scss/mobi/_menu_navigation.scss */
+  #mobi-nav-container {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background: #BB29BB;
+    text-align: right;
+    z-index: 999;
+    transform: translateX(100%);
+    transition: 0.5s ease-in;
+  }
+
+  /* line 17, ../scss/mobi/_menu_navigation.scss */
+  .show-nav {
+    transform: translateX(0%) !important;
+  }
+
+  /* line 21, ../scss/mobi/_menu_navigation.scss */
+  .main-logo {
+    float: left;
+  }
+  /* line 24, ../scss/mobi/_menu_navigation.scss */
+  .main-logo img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  /* line 31, ../scss/mobi/_menu_navigation.scss */
+  .menu-nav {
+    display: none;
+  }
+
+  /* line 35, ../scss/mobi/_menu_navigation.scss */
+  .hide {
+    display: none;
+  }
+
+  /* line 39, ../scss/mobi/_menu_navigation.scss */
+  .active {
+    transform: translateX(0%);
+  }
+
+  /* line 43, ../scss/mobi/_menu_navigation.scss */
+  form.search-form .form-control {
+    border: none !important;
+  }
+
+  /* line 47, ../scss/mobi/_menu_navigation.scss */
+  form.search-form {
+    width: 100%;
+    float: left;
+    margin-top: 13px;
+  }
+  /* line 52, ../scss/mobi/_menu_navigation.scss */
+  form.search-form input {
+    width: 260px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    float: left;
+  }
+
+  /* line 60, ../scss/mobi/_menu_navigation.scss */
+  .form-control {
+    display: block;
+    width: 100%;
+    height: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #4C4C4C;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: box-shadow ease-in-out .15s;
+  }
+  /* line 74, ../scss/mobi/_menu_navigation.scss */
+  .form-control:focus {
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.85), 0 0 8px rgba(139, 23, 155, 0.7);
+  }
+
+  /* line 80, ../scss/mobi/_menu_navigation.scss */
+  form.search-form button {
+    width: 40px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: #84BD00 url("https://www.lepuschitz-promotion.at/fileadmin/site/img/icon-search.png") 50% 50% no-repeat;
+    text-indent: -9999em;
+    float: left;
+    margin-right: 20px;
+  }
+
+  /* line 1, ../scss/mobi/_accordion.scss */
+  .accordion, .mobi-accordion, .mobi-accordion-parent, .accordion-link, .accordion-element {
+    background-color: #BB29BB;
+    color: #fff;
+    cursor: pointer;
+    padding: 18px;
+    width: 305px;
+    border: none;
+    text-align: right;
+    outline: none;
+    font-size: 14px;
+    transition: 0.15s;
+  }
+
+  /* line 14, ../scss/mobi/_accordion.scss */
+  .accordion, .mobi-accordion, .mobi-accordion-parent, .accordion-link {
+    border-right: 5px solid #84BD00;
+  }
+  /* line 17, ../scss/mobi/_accordion.scss */
+  .accordion:before, .mobi-accordion:before, .mobi-accordion-parent:before, .accordion-link:before {
+    color: #fff;
+    font-weight: 600;
+    float: right;
+    margin-left: 5px;
+  }
+
+  /* line 25, ../scss/mobi/_accordion.scss */
+  .accordion-active:before {
+    content: "\2212";
+  }
+
+  /* line 29, ../scss/mobi/_accordion.scss */
+  .accordion-element {
+    margin-left: 20px;
+    width: 285px;
+  }
+
+  /* line 34, ../scss/mobi/_accordion.scss */
+  .accordion-active, .accordion:hover, .accordion-element:hover {
+    background-color: #84BD00;
+    color: #fff;
+  }
+  /* line 38, ../scss/mobi/_accordion.scss */
+  .accordion-active a, .accordion:hover a, .accordion-element:hover a {
+    color: #fff;
+  }
+
+  /* line 43, ../scss/mobi/_accordion.scss */
+  .accordion-panel {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.15s ease-out;
+  }
+  /* line 49, ../scss/mobi/_accordion.scss */
+  .accordion-panel a {
+    color: #fff;
+  }
+  /* line 52, ../scss/mobi/_accordion.scss */
+  .accordion-panel a:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* line 60, ../scss/mobi/_accordion.scss */
+  .accordion-link a {
+    color: #fff;
+  }
+
+  /* line 13, ../scss/mobi/_gallery.scss */
+  .gallery {
+    width: 100%;
+    float: left;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    box-sizing: border-box;
+  }
+  /* line 20, ../scss/mobi/_gallery.scss */
+  .gallery .gallery-image {
+    height: 140px;
+    background-color: #fff;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+    margin-bottom: 5px;
+    border: 5px solid #84BD00;
+    border-radius: 2px;
+  }
+
+  /* line 32, ../scss/mobi/_gallery.scss */
+  .our-qualities {
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden;
+  }
+
+  /* line 38, ../scss/mobi/_gallery.scss */
+  .gallery-element {
+    display: block;
+    width: 47.5%;
+    overflow: hidden;
+    float: left;
+    margin: 0 5% 18px 0;
+    background: none;
+    text-align: center;
+    position: relative;
+  }
+  /* line 48, ../scss/mobi/_gallery.scss */
+  .gallery-element.fourth-category {
+    margin-right: 0;
+  }
+  /* line 52, ../scss/mobi/_gallery.scss */
+  .gallery-element.margin-right-0 {
+    margin-right: 0;
+  }
+  /* line 56, ../scss/mobi/_gallery.scss */
+  .gallery-element span {
+    left: 0;
+    width: 100%;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  /* line 67, ../scss/mobi/_gallery.scss */
+  .gallery-quality {
+    display: block;
+    width: 47.5%;
+    height: 190px;
+    overflow: hidden;
+    float: left;
+    margin: 0 5% 18px 0;
+    text-align: center;
+    position: relative;
+  }
+  /* line 77, ../scss/mobi/_gallery.scss */
+  .gallery-quality.fourth-category {
+    margin-right: 0;
+  }
+  /* line 81, ../scss/mobi/_gallery.scss */
+  .gallery-quality span {
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+  }
+  /* line 89, ../scss/mobi/_gallery.scss */
+  .gallery-quality .gallery-image {
+    margin-bottom: 0;
+  }
+
+  /* line 95, ../scss/mobi/_gallery.scss */
+  .best-deals .gallery-element {
+    height: 230px;
+  }
+  /* line 99, ../scss/mobi/_gallery.scss */
+  .best-deals .deal-percent {
+    background: #84BD00;
+    color: #fff;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    padding-top: 7px;
+    position: absolute;
+    width: 75px;
+    height: 25px;
+    top: 0;
+    left: 0;
+  }
+  /* line 113, ../scss/mobi/_gallery.scss */
+  .best-deals .deal {
+    font-size: 14px;
+    text-align: right;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  /* line 122, ../scss/mobi/_gallery.scss */
+  .best-deals .deal b {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  /* line 127, ../scss/mobi/_gallery.scss */
+  .best-deals .deal i {
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 100;
+  }
+
+  /* line 1, ../scss/mobi/_contact.scss */
+  .contact-form {
+    box-sizing: border-box;
+    width: 100%;
+  }
+  /* line 5, ../scss/mobi/_contact.scss */
+  .contact-form h1 {
+    margin-bottom: 15px;
+  }
+  /* line 9, ../scss/mobi/_contact.scss */
+  .contact-form form {
+    width: 100%;
+    display: block;
+  }
+  /* line 13, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row {
+    width: 100%;
+  }
+  /* line 16, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row .form-label {
+    width: 16%;
+    text-align: right;
+    font-size: 14px;
+    float: left;
+  }
+  /* line 23, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row p {
+    width: 74%;
+    margin-left: 10px;
+    float: left;
+  }
+  /* line 28, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row p span {
+    width: 100%;
+  }
+  /* line 31, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row p span input {
+    width: 100%;
+    height: 20px;
+    padding: 5px 5px 5px 10px;
+  }
+  /* line 37, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row p span textarea {
+    width: 100%;
+    height: 95px;
+    padding: 5px 6px 5px 10px;
+  }
+  /* line 46, ../scss/mobi/_contact.scss */
+  .contact-form form .form-row .form-submit input {
+    width: 79%;
+    height: 52px;
+    margin-left: 19%;
+  }
+
+  /* line 59, ../scss/mobi/_contact.scss */
+  .div-contact-content h1 {
+    margin-bottom: 15px;
+  }
+
+  /* line 1, ../scss/mobi/_product.scss */
+  .border-bottom-5-solid {
+    padding-bottom: 5px;
+    border-bottom: 5px solid;
+  }
+
+  /* line 6, ../scss/mobi/_product.scss */
+  .product-details {
+    float: left;
+    width: 100%;
+  }
+  /* line 10, ../scss/mobi/_product.scss */
+  .product-details .product-details-left {
+    float: left;
+    width: 100%;
+  }
+  /* line 14, ../scss/mobi/_product.scss */
+  .product-details .product-details-left #imgs {
+    background: #fff;
+    height: 375px;
+    width: 375px;
+    overflow: inherit;
+    max-height: 450px;
+    max-width: 375px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  /* line 25, ../scss/mobi/_product.scss */
+  .product-details .product-details-left #imgs img {
+    width: auto;
+    height: auto;
+    max-width: 375px;
+    max-height: 375px;
+  }
+  /* line 33, ../scss/mobi/_product.scss */
+  .product-details .product-details-left .starting-price {
+    font-size: 25px;
+    display: block;
+    text-align: center;
+    padding: 30px 0 30px 0;
+    color: #4D4D4D;
+  }
+  /* line 41, ../scss/mobi/_product.scss */
+  .product-details .product-details-left .colors div {
+    display: block;
+    float: left;
+    width: 45px;
+    height: 45px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  /* line 51, ../scss/mobi/_product.scss */
+  .product-details .product-details-left .colors span {
+    display: block;
+    width: 45px;
+    height: 45px;
+  }
+  /* line 57, ../scss/mobi/_product.scss */
+  .product-details .product-details-left .colors {
+    margin: 0 auto;
+    width: fit-content;
+    height: 45px;
+    margin-bottom: 30px;
+  }
+  /* line 65, ../scss/mobi/_product.scss */
+  .product-details .product-details-right {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 1em;
+    text-align: justify;
+  }
+  /* line 71, ../scss/mobi/_product.scss */
+  .product-details .product-details-right h2 {
+    font-size: 26px;
+    padding-bottom: 10px;
+    line-height: 1.25;
+  }
+  /* line 76, ../scss/mobi/_product.scss */
+  .product-details .product-details-right h2 span {
+    font-size: 16px;
+  }
+
+  /* line 83, ../scss/mobi/_product.scss */
+  .product-sizes {
+    color: #4C4C4C;
+  }
+
+  /* line 87, ../scss/mobi/_product.scss */
+  .product-pricing, .have-questions {
+    padding: 5px 0;
+    margin-bottom: 30px;
+  }
+  /* line 91, ../scss/mobi/_product.scss */
+  .product-pricing table, .have-questions table {
+    width: 100%;
+    border: 1px solid #4D4D4D !important;
+    border-color: #4D4D4D;
+  }
+  /* line 96, ../scss/mobi/_product.scss */
+  .product-pricing table th, .product-pricing table td, .have-questions table th, .have-questions table td {
+    border-bottom: 1px solid #D8D8D8;
+    padding: 7.5px 5px;
+    text-align: center;
+  }
+  /* line 102, ../scss/mobi/_product.scss */
+  .product-pricing table th, .have-questions table th {
+    text-align: left !important;
+  }
+  /* line 106, ../scss/mobi/_product.scss */
+  .product-pricing table td, .have-questions table td {
+    vertical-align: top;
+    border-left: 1px solid #D9D9D9;
+  }
+  /* line 111, ../scss/mobi/_product.scss */
+  .product-pricing table tr:nth-child(2n) th, .product-pricing table tr:nth-child(2n) td, .have-questions table tr:nth-child(2n) th, .have-questions table tr:nth-child(2n) td {
+    border-bottom: 0;
+  }
+
+  /* line 118, ../scss/mobi/_product.scss */
+  .have-questions table {
+    border: none !important;
+  }
+  /* line 122, ../scss/mobi/_product.scss */
+  .have-questions tr .table-upper {
+    background: #D8D8D8;
+    text-align: center;
+    font-weight: 600;
+  }
+  /* line 128, ../scss/mobi/_product.scss */
+  .have-questions tr:last-child td {
+    border-top: 1px solid #D8D8D8;
+  }
+  /* line 132, ../scss/mobi/_product.scss */
+  .have-questions .table-phone {
+    color: #84BD00;
+    text-align: center;
+    font-size: 20px;
+  }
+  /* line 138, ../scss/mobi/_product.scss */
+  .have-questions .table-phone a {
+    color: #84BD00;
+    text-align: center;
+    font-size: 20px;
+  }
+  /* line 143, ../scss/mobi/_product.scss */
+  .have-questions .table-phone a:hover {
+    text-decoration: underline;
+  }
+  /* line 149, ../scss/mobi/_product.scss */
+  .have-questions .table-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 155, ../scss/mobi/_product.scss */
+  .calculator {
+    margin-bottom: 30px;
+  }
+  /* line 158, ../scss/mobi/_product.scss */
+  .calculator .form-group-left, .calculator .form-group-right {
+    float: left;
+    width: 47.5%;
+  }
+  /* line 163, ../scss/mobi/_product.scss */
+  .calculator .form-group-left {
+    margin-right: 5%;
+  }
+  /* line 167, ../scss/mobi/_product.scss */
+  .calculator fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  /* line 173, ../scss/mobi/_product.scss */
+  .calculator label {
+    float: left;
+    width: 47.5%;
+    text-align: left;
+    padding-right: 15px;
+    line-height: 30px;
+    margin-bottom: 0.25em;
+  }
+  /* line 182, ../scss/mobi/_product.scss */
+  .calculator .form-control {
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #F7F7F7;
+    border: 1px solid #b5b5b5;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 1em;
+  }
+  /* line 194, ../scss/mobi/_product.scss */
+  .calculator #btnPrice {
+    width: 100%;
+    height: 50px;
+  }
+  /* line 199, ../scss/mobi/_product.scss */
+  .calculator #price {
+    box-sizing: border-box;
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    color: #BB29BB;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 7.5px 0 0 15px;
+  }
+
+  /* line 211, ../scss/mobi/_product.scss */
+  .btn-contact {
+    width: 47.5%;
+    height: 50px;
+    margin-top: 1.5em;
+  }
+
+  /* line 217, ../scss/mobi/_product.scss */
+  .other-subcategories {
+    padding: 1em;
+  }
+
+  /* line 1, ../scss/mobi/_footer.scss */
+  footer {
+    color: white;
+    box-sizing: border-box;
+    clear: both;
+    background-color: #23282D;
+    margin-top: 50px;
+    position: relative;
+    padding: 1em;
+    height: 667px;
+  }
+
+  /* line 12, ../scss/mobi/_footer.scss */
+  .footer-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 40px 0;
+    margin: 0 auto;
+    min-height: 350px;
+    position: relative;
+  }
+  /* line 20, ../scss/mobi/_footer.scss */
+  .footer-container h1 {
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+  /* line 27, ../scss/mobi/_footer.scss */
+  .footer-container a {
+    color: #fff;
+    line-height: 1.6em;
+    font-size: 14px;
+  }
+  /* line 32, ../scss/mobi/_footer.scss */
+  .footer-container a:hover {
+    text-decoration: underline;
+  }
+  /* line 37, ../scss/mobi/_footer.scss */
+  .footer-container p {
+    font-weight: 300;
+    font-size: 14px;
+  }
+  /* line 42, ../scss/mobi/_footer.scss */
+  .footer-container .social-icon {
+    margin-right: 10px;
+  }
+  /* line 45, ../scss/mobi/_footer.scss */
+  .footer-container .social-icon a:hover {
+    text-decoration: none;
+  }
+  /* line 49, ../scss/mobi/_footer.scss */
+  .footer-container .social-icon img {
+    width: 47px;
+    height: 47px;
+  }
+  /* line 56, ../scss/mobi/_footer.scss */
+  .footer-container .footer-contact img {
+    height: 44px;
+    width: 34px;
+    margin-right: 10px;
+    float: left;
+  }
+  /* line 63, ../scss/mobi/_footer.scss */
+  .footer-container .footer-contact p {
+    padding-bottom: 15px;
+    line-height: 1.5em;
+  }
+  /* line 69, ../scss/mobi/_footer.scss */
+  .footer-container hr {
+    display: block;
+    box-sizing: content-box;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #B2B2B2;
+    padding-bottom: 15px;
+    width: 75%;
+    margin: 0 auto;
+  }
+  /* line 80, ../scss/mobi/_footer.scss */
+  .footer-container .footer-menu {
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  /* line 86, ../scss/mobi/_footer.scss */
+  .footer-part {
+    box-sizing: border-box;
+    padding-right: 12px;
+    width: 50%;
+    height: 150px;
+    float: left;
+  }
+
+  /* line 94, ../scss/mobi/_footer.scss */
+  img.wko {
+    position: absolute;
+    z-index: 999999;
+    right: 125px;
+    bottom: 35px;
+    height: 125px;
+    width: 125px;
+  }
+
+  /* line 1, ../scss/mobi/_price_note.scss */
+  .price_note {
+    border: 1px solid #23282D;
+    box-sizing: border-box;
+    max-width: 700px;
+    margin: 0 20px;
+    padding: 10px;
+  }
+  /* line 8, ../scss/mobi/_price_note.scss */
+  .price_note .price_toprow {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  /* line 14, ../scss/mobi/_price_note.scss */
+  .price_note .price_toprow .price_download {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  /* line 19, ../scss/mobi/_price_note.scss */
+  .price_note .price_toprow .price_download a {
+    background: #84BD00;
+    color: #fff;
+    text-align: center;
+    min-width: 110px;
+    width: fit-content;
+  }
+  /* line 26, ../scss/mobi/_price_note.scss */
+  .price_note .price_toprow .price_logo {
+    width: 150px;
+    margin-left: 15px;
+  }
+  /* line 30, ../scss/mobi/_price_note.scss */
+  .price_note .price_toprow .price_logo a img {
+    width: 100%;
+  }
+  /* line 37, ../scss/mobi/_price_note.scss */
+  .price_note .price_productname {
+    text-align: center;
+    text-transform: uppercase;
+  }
+  /* line 41, ../scss/mobi/_price_note.scss */
+  .price_note .price_productsmalldesc {
+    text-align: center;
+  }
+  /* line 44, ../scss/mobi/_price_note.scss */
+  .price_note .price_productdesc {
+    margin: 30px;
+  }
+  /* line 47, ../scss/mobi/_price_note.scss */
+  .price_note .price_productinfo {
+    display: grid;
+    justify-content: center;
+  }
+  /* line 51, ../scss/mobi/_price_note.scss */
+  .price_note .price_productinfo .price_productgallery {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000000;
+    margin: 30px auto;
+  }
+  /* line 58, ../scss/mobi/_price_note.scss */
+  .price_note .price_productinfo .price_productdetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+  }
+  /* line 64, ../scss/mobi/_price_note.scss */
+  .price_note .price_calculation {
+    display: flex;
+    justify-content: space-evenly;
+    border: 1px solid #23282D;
+  }
+  /* line 68, ../scss/mobi/_price_note.scss */
+  .price_note .price_calculation .price_calctabs {
+    font-size: 12px;
+  }
+  /* line 73, ../scss/mobi/_price_note.scss */
+  .price_note .price_informations {
+    margin: 30px;
+    align-items: center;
+    padding-top: 20px;
+    color: #fff;
+    background: #23282D;
+    text-align: center;
+  }
+  /* line 80, ../scss/mobi/_price_note.scss */
+  .price_note .price_informations a {
+    color: #fff;
+  }
+}
+@media screen and (min-width: 769px) {
+  /* line 1, ../scss/desktop/_css_reset.scss */
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed,
+  figure, figcaption, footer, header, hgroup,
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  /* HTML5 display-role reset for older browsers */
+  /* line 22, ../scss/desktop/_css_reset.scss */
+  article, aside, details, figcaption, figure,
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+
+  /* line 26, ../scss/desktop/_css_reset.scss */
+  body {
+    line-height: 1;
+  }
+
+  /* line 29, ../scss/desktop/_css_reset.scss */
+  ol, ul {
+    list-style: none;
+  }
+
+  /* line 32, ../scss/desktop/_css_reset.scss */
+  blockquote, q {
+    quotes: none;
+  }
+
+  /* line 35, ../scss/desktop/_css_reset.scss */
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+
+  /* line 40, ../scss/desktop/_css_reset.scss */
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  /* line 45, ../scss/desktop/_css_reset.scss */
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* line 3, ../scss/desktop/_general-new.scss */
+  .border-bottom-5-solid {
+    padding-bottom: 5px;
+    border-bottom: 5px solid;
+    margin-bottom: 6px !important;
+  }
+
+  /* line 9, ../scss/desktop/_general-new.scss */
+  .variant-border {
+    margin-bottom: 6px;
+  }
+
+  /* line 13, ../scss/desktop/_general-new.scss */
+  .desktop {
+    display: block;
+  }
+
+  /* line 17, ../scss/desktop/_general-new.scss */
+  .mobi {
+    display: none;
+  }
+
+  /* line 21, ../scss/desktop/_general-new.scss */
+  body {
+    background-color: #F7F7F7;
+    margin: 0 auto;
+    min-width: 1140px;
+    font-family: arial, sans-serif;
+  }
+
+  /* line 28, ../scss/desktop/_general-new.scss */
+  img.wko {
+    position: absolute;
+    z-index: 999999;
+    right: 25px;
+    bottom: 12px;
+    height: 125px;
+    width: 125px;
+  }
+
+  /* line 37, ../scss/desktop/_general-new.scss */
+  main > .left-and-right {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* line 42, ../scss/desktop/_general-new.scss */
+  .space-filler-large {
+    min-height: 500px;
+  }
+
+  /* line 46, ../scss/desktop/_general-new.scss */
+  .space-filler-small {
+    min-height: 75px;
+  }
+
+  /* line 50, ../scss/desktop/_general-new.scss */
+  .clear-both {
+    clear: both;
+  }
+
+  /* line 54, ../scss/desktop/_general-new.scss */
+  a {
+    color: #BB29BB;
+    text-decoration: none;
+  }
+
+  /* line 60, ../scss/desktop/_general-new.scss */
+  a.link-underline:hover {
+    text-decoration: underline;
+  }
+
+  /* line 65, ../scss/desktop/_general-new.scss */
+  #container {
+    margin: 0 auto;
+    width: 1140px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+
+  /* line 72, ../scss/desktop/_general-new.scss */
+  .container-middle {
+    margin: 0 auto;
+  }
+
+  /* line 76, ../scss/desktop/_general-new.scss */
+  .text, h1, h2, h3, h4, .banners .banner-left, .menu-nav > ul > li > ul > li > ul > li a, .accordion_faq .accordion-panel p {
+    font-size: 14px;
+    color: #4D4D4D;
+  }
+
+  /* line 81, ../scss/desktop/_general-new.scss */
+  .text-dark {
+    color: #BB29BB !important;
+  }
+
+  /* line 85, ../scss/desktop/_general-new.scss */
+  .text-light {
+    color: #fff !important;
+  }
+
+  /* line 89, ../scss/desktop/_general-new.scss */
+  .text-center {
+    text-align: center;
+  }
+
+  /* line 93, ../scss/desktop/_general-new.scss */
+  .text-left {
+    text-align: left;
+  }
+
+  /* line 97, ../scss/desktop/_general-new.scss */
+  .text-right {
+    text-align: right;
+  }
+
+  /* line 101, ../scss/desktop/_general-new.scss */
+  .phone {
+    float: right;
+    font-size: 20px;
+    line-height: 60px;
+  }
+
+  /* line 111, ../scss/desktop/_general-new.scss */
+  h1 {
+    font-weight: 600;
+    font-size: 20px;
+  }
+  /* line 115, ../scss/desktop/_general-new.scss */
+  h1 span.bold {
+    color: #84BD00;
+  }
+
+  /* line 120, ../scss/desktop/_general-new.scss */
+  h2 {
+    font-size: 14px;
+    font-weight: 300;
+    padding-bottom: 24px;
+  }
+
+  /* line 126, ../scss/desktop/_general-new.scss */
+  h3 {
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  /* line 132, ../scss/desktop/_general-new.scss */
+  .banners .text, .banners h1, .banners h2, .banners h3, .banners h4, .banners .banner-left, .banners .menu-nav > ul > li > ul > li > ul > li a, .menu-nav > ul > li > ul > li > ul > li .banners a, .banners .accordion_faq .accordion-panel p, .accordion_faq .accordion-panel .banners p {
+    font-weight: normal;
+  }
+  /* line 136, ../scss/desktop/_general-new.scss */
+  .banners h2 {
+    color: #BB29BB;
+    font-weight: 600;
+    padding-bottom: 15px;
+  }
+
+  /* line 143, ../scss/desktop/_general-new.scss */
+  .left-and-right {
+    margin-top: 15px;
+    width: 1140px;
+  }
+
+  /* line 149, ../scss/desktop/_general-new.scss */
+  .half-screen {
+    box-sizing: border-box;
+    width: 550px;
+    float: left;
+  }
+  /* line 154, ../scss/desktop/_general-new.scss */
+  .half-screen .margin-right {
+    margin-right: 40px;
+  }
+
+  /* line 159, ../scss/desktop/_general-new.scss */
+  .divider {
+    width: 5px;
+    height: 362px;
+    background-color: #23282D;
+    margin: 0 17.5px 0 17.5px;
+    float: left;
+  }
+
+  /* line 167, ../scss/desktop/_general-new.scss */
+  .right-column {
+    width: 815px;
+    min-height: 600px;
+    float: left;
+  }
+
+  /* line 173, ../scss/desktop/_general-new.scss */
+  .left-column {
+    width: 305px;
+    min-height: 300px;
+    float: left;
+    margin-right: 20px;
+  }
+  /* line 179, ../scss/desktop/_general-new.scss */
+  .left-column h3 {
+    font-size: 18px;
+    padding-bottom: 4px;
+    font-weight: 300;
+  }
+  /* line 185, ../scss/desktop/_general-new.scss */
+  .left-column ul {
+    list-style: none;
+    padding-bottom: 20px;
+    margin: 0;
+  }
+  /* line 191, ../scss/desktop/_general-new.scss */
+  .left-column .phone {
+    float: none;
+    line-height: 25px;
+  }
+  /* line 196, ../scss/desktop/_general-new.scss */
+  .left-column ul > li {
+    padding-bottom: 2px;
+  }
+  /* line 200, ../scss/desktop/_general-new.scss */
+  .left-column a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 205, ../scss/desktop/_general-new.scss */
+  p {
+    padding: 0 0 15px 0;
+    line-height: 1.5em;
+  }
+
+  /* line 210, ../scss/desktop/_general-new.scss */
+  .left {
+    float: left;
+  }
+
+  /* line 214, ../scss/desktop/_general-new.scss */
+  .right {
+    float: right;
+  }
+
+  /* line 218, ../scss/desktop/_general-new.scss */
+  nav, .main-nav-container, .menu-nav {
+    z-index: 3000;
+  }
+
+  /* line 222, ../scss/desktop/_general-new.scss */
+  nav, .container, .inner {
+    width: 1140px;
+    margin: 0 auto;
+    clear: both;
+  }
+
+  /* line 228, ../scss/desktop/_general-new.scss */
+  .logo {
+    clear: both;
+    display: block;
+    padding: 0 0 10px 0;
+    float: left;
+    z-index: 30000;
+  }
+  /* line 235, ../scss/desktop/_general-new.scss */
+  .logo img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  /* line 242, ../scss/desktop/_general-new.scss */
+  .btn, .contact-form form .form-row .form-submit input {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.32857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+  }
+
+  /* line 257, ../scss/desktop/_general-new.scss */
+  .btn-default, .contact-form form .form-row .form-submit input {
+    color: #fff;
+    background-color: #82bb00;
+    border-color: #82bb00;
+  }
+
+  /* line 262, ../scss/desktop/_general-new.scss */
+  .btn.focus, .contact-form form .form-row .form-submit input.focus, .btn:focus, .contact-form form .form-row .form-submit input:focus, .btn:hover, .contact-form form .form-row .form-submit input:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* line 266, ../scss/desktop/_general-new.scss */
+  .btn-default.focus, .contact-form form .form-row .form-submit input.focus, .btn-default:focus, .contact-form form .form-row .form-submit input:focus {
+    color: #fff;
+    background-color: #6d9a06;
+    border-color: #6d9a06;
+  }
+
+  /* line 271, ../scss/desktop/_general-new.scss */
+  .btn-default:hover, .contact-form form .form-row .form-submit input:hover {
+    color: #fff;
+    background-color: #6d9a06;
+    border-color: #6d9a06;
+  }
+
+  /* line 277, ../scss/desktop/_general-new.scss */
+  .article {
+    width: 1140px;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+
+  /* line 283, ../scss/desktop/_general-new.scss */
+  .area-center {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  /* line 288, ../scss/desktop/_general-new.scss */
+  .breadcrumbs {
+    min-height: 20px;
+    background: none;
+    padding: 15px;
+    font-weight: 600;
+  }
+  /* line 295, ../scss/desktop/_general-new.scss */
+  .breadcrumbs .breadbcrumb-green {
+    color: #84BD00;
+  }
+  /* line 298, ../scss/desktop/_general-new.scss */
+  .breadcrumbs .breadbcrumb-green a {
+    color: #84BD00;
+  }
+  /* line 303, ../scss/desktop/_general-new.scss */
+  .breadcrumbs .breadcrumb-purple {
+    color: #BB29BB;
+  }
+  /* line 306, ../scss/desktop/_general-new.scss */
+  .breadcrumbs .breadcrumb-purple a {
+    color: #BB29BB;
+  }
+  /* line 311, ../scss/desktop/_general-new.scss */
+  .breadcrumbs a {
+    display: inline-block;
+    line-height: 20px;
+    padding: 0 5px;
+  }
+  /* line 316, ../scss/desktop/_general-new.scss */
+  .breadcrumbs a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 322, ../scss/desktop/_general-new.scss */
+  .banners {
+    width: 1140px;
+    min-height: 250px;
+  }
+  /* line 326, ../scss/desktop/_general-new.scss */
+  .banners .banner-left, .banners .banner-right {
+    display: block;
+    width: 557px;
+    height: 275px;
+  }
+  /* line 332, ../scss/desktop/_general-new.scss */
+  .banners .banner-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 26px;
+    float: left;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-weight: 600;
+    font-size: 70px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* line 350, ../scss/desktop/_general-new.scss */
+  .banners .banner-right {
+    float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* line 357, ../scss/desktop/_general-new.scss */
+  body {
+    background: black !important;
+    color: white;
+  }
+
+  /* line 1, ../scss/desktop/_header-new.scss */
+  header {
+    width: 100%;
+    background-color: #23282D;
+    color: #fff;
+    float: left;
+    height: 60px;
+    margin-bottom: 10px;
+    border-bottom: 14px solid #BB29BB;
+  }
+  /* line 10, ../scss/desktop/_header-new.scss */
+  header .more-info {
+    display: block;
+    background: #23282D;
+    float: right;
+    width: 385px;
+    height: 60px;
+  }
+  /* line 17, ../scss/desktop/_header-new.scss */
+  header .more-info .hover-highlight {
+    float: right;
+    padding: 0 35px 0 35px;
+    line-height: 60px;
+    color: #fff;
+    transition: background 0.15s;
+  }
+  /* line 25, ../scss/desktop/_header-new.scss */
+  header .more-info .hover-underline {
+    float: right;
+    padding-left: 5px;
+    font-size: 19px;
+    line-height: 60px;
+    color: #fff;
+  }
+  /* line 32, ../scss/desktop/_header-new.scss */
+  header .more-info .hover-underline:hover {
+    text-decoration: underline;
+  }
+
+  /* line 1, ../scss/desktop/_search-new.scss */
+  .search-form .form-control {
+    border: none !important;
+  }
+
+  /* line 5, ../scss/desktop/_search-new.scss */
+  .search-form {
+    width: 450px;
+    float: left;
+    margin-top: 13px;
+  }
+  /* line 10, ../scss/desktop/_search-new.scss */
+  .search-form label span {
+    display: none;
+  }
+  /* line 14, ../scss/desktop/_search-new.scss */
+  .search-form label .search-field {
+    display: block;
+    width: 260px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #4C4C4C;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid transparent;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    float: left;
+    transition: box-shadow ease-in-out .15s;
+  }
+  /* line 29, ../scss/desktop/_search-new.scss */
+  .search-form label .search-field:focus {
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.85), 0 0 8px rgba(139, 23, 155, 0.7);
+  }
+  /* line 35, ../scss/desktop/_search-new.scss */
+  .search-form .search-submit {
+    width: 40px;
+    height: 35px;
+    border: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: #84BD00 url("https://www.lepuschitz-promotion.at/fileadmin/site/img/icon-search.png") 50% 50% no-repeat;
+    text-indent: -9999em;
+    float: left;
+    margin-right: 20px;
+  }
+
+  /* line 1, ../scss/desktop/_menu_navigation-new.scss */
+  nav .main-nav-container .menu-nav {
+    z-index: 3000;
+  }
+
+  /* line 5, ../scss/desktop/_menu_navigation-new.scss */
+  .nav-container {
+    position: relative;
+  }
+
+  /* line 9, ../scss/desktop/_menu_navigation-new.scss */
+  .main-logo {
+    width: 250px;
+  }
+  /* line 12, ../scss/desktop/_menu_navigation-new.scss */
+  .main-logo img {
+    width: 250px;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  /* line 19, ../scss/desktop/_menu_navigation-new.scss */
+  .main-nav-container {
+    width: 890px;
+    float: right;
+    background: #F7F7F7;
+    font-size: 16px;
+  }
+
+  /* line 26, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul {
+    margin: 0 auto;
+    width: 100%;
+    list-style: none;
+    position: relative;
+    box-sizing: border-box;
+    text-align: right;
+  }
+
+  /* line 35, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li {
+    display: inline-block;
+    background: #F7F7F7;
+    transition: background 0.15s;
+  }
+  /* line 40, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li a {
+    text-decoration: none;
+    padding: 1.5em 3em 1.5em 1.5em;
+    display: block;
+    color: #4D4D4D;
+  }
+
+  /* line 48, ../scss/desktop/_menu_navigation-new.scss */
+  .hide {
+    display: none;
+  }
+
+  /* line 52, ../scss/desktop/_menu_navigation-new.scss */
+  .active {
+    background: #fff;
+    color: #BB29BB !important;
+  }
+
+  /* line 57, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul {
+    width: 100%;
+    background: #fff;
+    position: absolute;
+    z-index: 99999;
+    left: 0;
+    list-style: none;
+    box-sizing: border-box;
+    border-bottom: 5px solid #BB29BB;
+    text-align: left;
+  }
+  /* line 68, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul.product-nav {
+    padding: 20px;
+  }
+
+  /* line 73, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul.ddRegular {
+    width: 250px;
+    left: auto;
+    border-bottom: 5px solid #BB29BB;
+  }
+
+  /* line 79, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul.ddRegular > li {
+    width: 100%;
+    min-height: 0;
+  }
+  /* line 83, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul.ddRegular > li a {
+    padding: 0.7em 0 0.7em 1.5em;
+    width: 229px;
+    display: block;
+    color: #BB29BB;
+    border: none;
+  }
+  /* line 90, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul.ddRegular > li a:hover {
+    background: #F7F7F7;
+  }
+
+  /* line 96, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li {
+    margin: 0;
+    padding-bottom: 0;
+    list-style: none;
+    width: 25%;
+    min-height: 150px;
+    background: none;
+    float: left;
+    font-size: 14px;
+  }
+  /* line 106, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li a {
+    padding: 0.2em 0;
+    width: 95%;
+    display: block;
+    border-bottom: 1px solid #ccc;
+    color: #BB29BB;
+  }
+  /* line 113, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li a:hover {
+    background: rgba(140, 24, 155, 0.1);
+  }
+
+  /* line 119, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul {
+    display: block;
+    margin: 10px 0 15px 0;
+    list-style: none;
+    box-sizing: border-box;
+  }
+
+  /* line 126, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul > li {
+    float: left;
+    width: 100%;
+  }
+  /* line 130, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul > li a {
+    border: 0;
+  }
+  /* line 134, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul > li a:hover {
+    background: #F7F7F7;
+    color: #BB29BB;
+  }
+  /* line 140, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul > li a.mehr {
+    color: #BB29BB !important;
+  }
+  /* line 143, ../scss/desktop/_menu_navigation-new.scss */
+  .menu-nav > ul > li > ul > li > ul > li a.mehr:hover {
+    background: #F7F7F7 !important;
+  }
+
+  /* line 1, ../scss/desktop/_accordion.scss */
+  .accordion, .accordion-element {
+    background-color: #F7F7F7;
+    color: #4D4D4D;
+    cursor: pointer;
+    padding: 18px;
+    width: 305px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 14px;
+    transition: 0.15s;
+  }
+
+  /* line 14, ../scss/desktop/_accordion.scss */
+  .accordion-title {
+    color: #BB29BB;
+    font-weight: 600 !important;
+  }
+
+  /* line 19, ../scss/desktop/_accordion.scss */
+  .accordion {
+    border-left: 5px solid #23282D;
+  }
+  /* line 22, ../scss/desktop/_accordion.scss */
+  .accordion:after {
+    content: url("https://www.lepuschitz-promotion.at/fileadmin/site/img/arrow-down.png");
+    color: #fff;
+    font-weight: 600;
+    float: right;
+    margin-left: 5px;
+  }
+
+  /* line 31, ../scss/desktop/_accordion.scss */
+  .accordion-active:after {
+    content: "\2212";
+  }
+
+  /* line 35, ../scss/desktop/_accordion.scss */
+  .accordion-element {
+    margin-left: 15px;
+    width: 285px;
+    border-left: 5px solid #84BD00;
+    padding: 18px 0;
+  }
+
+  /* line 42, ../scss/desktop/_accordion.scss */
+  .accordion-active, .accordion:hover, .accordion-element:hover {
+    background-color: #84BD00;
+    color: #fff;
+  }
+  /* line 46, ../scss/desktop/_accordion.scss */
+  .accordion-active a, .accordion:hover a, .accordion-element:hover a {
+    color: #fff;
+  }
+
+  /* line 51, ../scss/desktop/_accordion.scss */
+  .accordion-panel {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.15s ease-out;
+  }
+  /* line 57, ../scss/desktop/_accordion.scss */
+  .accordion-panel a {
+    box-sizing: border-box;
+    color: #4D4D4D;
+    padding: 18px;
+  }
+  /* line 62, ../scss/desktop/_accordion.scss */
+  .accordion-panel a:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* line 70, ../scss/desktop/_accordion.scss */
+  .accordion_faq .accordion {
+    padding: 18px;
+    width: 572px;
+    font-size: 16px;
+  }
+  /* line 77, ../scss/desktop/_accordion.scss */
+  .accordion_faq .accordion-panel p {
+    padding: 20px;
+    text-align: justify;
+    font-size: 14px;
+  }
+
+  /* line 1, ../scss/desktop/_contact-new.scss */
+  .contact-form {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+  }
+  /* line 6, ../scss/desktop/_contact-new.scss */
+  .contact-form h1 {
+    margin-bottom: 15px;
+  }
+  /* line 10, ../scss/desktop/_contact-new.scss */
+  .contact-form form {
+    width: 100%;
+    display: block;
+  }
+  /* line 14, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row {
+    width: 100%;
+  }
+  /* line 17, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row .form-label {
+    width: 102px;
+    text-align: right;
+    font-size: 14px;
+    float: left;
+  }
+  /* line 24, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row p {
+    width: 378px;
+    margin-left: 10px;
+    float: left;
+  }
+  /* line 29, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row p span {
+    width: 100%;
+  }
+  /* line 32, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row p span input {
+    width: 100%;
+    height: 20px;
+    padding: 5px 5px 5px 10px;
+  }
+  /* line 38, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row p span textarea {
+    font-family: arial, sans-serif;
+    width: 100%;
+    height: 95px;
+    padding: 5px 5px 5px 10px;
+  }
+  /* line 48, ../scss/desktop/_contact-new.scss */
+  .contact-form form .form-row .form-submit input {
+    width: 190px;
+    height: 52px;
+    margin-left: 112px;
+  }
+
+  /* line 60, ../scss/desktop/_contact-new.scss */
+  .div-contact-content {
+    padding: 20px;
+    min-height: 362px;
+  }
+  /* line 65, ../scss/desktop/_contact-new.scss */
+  .div-contact-content h1 {
+    margin-bottom: 15px;
+  }
+
+  /* line 13, ../scss/desktop/_gallery-new.scss */
+  .gallery {
+    width: 100%;
+    float: left;
+    margin-bottom: 40px;
+    margin-top: 15px;
+  }
+  /* line 19, ../scss/desktop/_gallery-new.scss */
+  .gallery .gallery-image {
+    height: 140px;
+    background-color: #fff;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-bottom: 5px;
+    border: 5px solid #84BD00;
+    border-radius: 2px;
+  }
+
+  /* line 31, ../scss/desktop/_gallery-new.scss */
+  .our-qualities {
+    width: fit-content;
+    height: 165px;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* line 39, ../scss/desktop/_gallery-new.scss */
+  .gallery-element {
+    display: block;
+    width: 190px;
+    height: 200px;
+    overflow: hidden;
+    float: left;
+    margin: 0 18px 18px 0;
+    background: none;
+    text-align: center;
+    position: relative;
+  }
+  /* line 50, ../scss/desktop/_gallery-new.scss */
+  .gallery-element.fourth-category {
+    margin-right: 0;
+  }
+  /* line 53, ../scss/desktop/_gallery-new.scss */
+  .gallery-element.fourth-category:hover {
+    margin-right: -24px;
+  }
+  /* line 58, ../scss/desktop/_gallery-new.scss */
+  .gallery-element:hover {
+    padding: 19px 24px 10px 19px;
+    margin: -19px -6px 8px -19px;
+  }
+  /* line 62, ../scss/desktop/_gallery-new.scss */
+  .gallery-element:hover .gallery-image {
+    z-index: 999999999;
+    transform: scale(1.1);
+  }
+  /* line 67, ../scss/desktop/_gallery-new.scss */
+  .gallery-element:hover .deal-percent {
+    z-index: 999999;
+    transform: translateX(12px) translateY(12px);
+  }
+  /* line 72, ../scss/desktop/_gallery-new.scss */
+  .gallery-element:hover .deal {
+    z-index: 999999;
+    bottom: 10px;
+    right: 24px;
+  }
+  /* line 79, ../scss/desktop/_gallery-new.scss */
+  .gallery-element span {
+    left: 0;
+    width: 100%;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  /* line 90, ../scss/desktop/_gallery-new.scss */
+  .gallery-quality {
+    display: block;
+    width: 190px;
+    height: 200px;
+    overflow: hidden;
+    float: left;
+    margin: 0 18px 18px 0;
+    text-align: center;
+    position: relative;
+  }
+  /* line 100, ../scss/desktop/_gallery-new.scss */
+  .gallery-quality.fourth-category {
+    margin-right: 0;
+  }
+  /* line 104, ../scss/desktop/_gallery-new.scss */
+  .gallery-quality span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+  }
+  /* line 111, ../scss/desktop/_gallery-new.scss */
+  .gallery-quality .gallery-image {
+    margin-bottom: 0;
+  }
+
+  /* line 117, ../scss/desktop/_gallery-new.scss */
+  .best-deals .gallery-element {
+    height: 224px;
+  }
+  /* line 121, ../scss/desktop/_gallery-new.scss */
+  .best-deals .deal-percent {
+    background: #84BD00;
+    color: #fff;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    padding-top: 7px;
+    position: absolute;
+    width: 75px;
+    height: 25px;
+    top: 0;
+    left: 0;
+  }
+  /* line 139, ../scss/desktop/_gallery-new.scss */
+  .best-deals .deal {
+    font-size: 14px;
+    text-align: right;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  /* line 148, ../scss/desktop/_gallery-new.scss */
+  .best-deals .deal b {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  /* line 153, ../scss/desktop/_gallery-new.scss */
+  .best-deals .deal i {
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 100;
+  }
+
+  /* line 1, ../scss/desktop/_product.scss */
+  body.active {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* line 6, ../scss/desktop/_product.scss */
+  .modal {
+    position: fixed;
+    z-index: 999999999999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 50px;
+    visibility: hidden;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    background: #fff;
+    opacity: 0;
+    transition: 0.5s;
+  }
+
+  /* line 20, ../scss/desktop/_product.scss */
+  #calculatorModal {
+    top: 40%;
+    width: 403px;
+  }
+  /* line 25, ../scss/desktop/_product.scss */
+  #calculatorModal h1 {
+    padding-bottom: 20px;
+  }
+  /* line 29, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorPriceRanges {
+    width: 100%;
+    border: 1px solid #4D4D4D !important;
+    border-color: #4D4D4D;
+    margin-bottom: 20px;
+  }
+  /* line 35, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorPriceRanges th, #calculatorModal #calculatorPriceRanges td {
+    border-bottom: 1px solid #D8D8D8;
+    padding: 10px 15px;
+    text-align: center;
+  }
+  /* line 41, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorPriceRanges th {
+    text-align: left !important;
+  }
+  /* line 45, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorPriceRanges td {
+    vertical-align: top;
+    border-left: 1px solid #D9D9D9;
+  }
+  /* line 50, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorPriceRanges tr:nth-child(2n) th, #calculatorModal #calculatorPriceRanges tr:nth-child(2n) td {
+    border-bottom: 0;
+  }
+  /* line 55, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorContainer {
+    position: relative;
+    color: #4D4D4D;
+  }
+  /* line 59, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorContainer #btnClose {
+    position: absolute;
+    top: -25px;
+    right: -40px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  /* line 71, ../scss/desktop/_product.scss */
+  #calculatorModal #calculatorContainer #btnNote {
+    margin-right: 15px;
+  }
+
+  /* line 77, ../scss/desktop/_product.scss */
+  #PriceNoteModal {
+    /*width: 100%;*/
+    height: 100vh;
+    /*overflow: hidden;*/
+    overflow: scroll;
+  }
+
+  /* line 84, ../scss/desktop/_product.scss */
+  #calculatorModal.active {
+    top: 50%;
+    visibility: visible;
+    opacity: 1;
+    transition: 0.5s;
+  }
+
+  /* line 91, ../scss/desktop/_product.scss */
+  #PriceNoteModal.active {
+    visibility: visible;
+    opacity: 1;
+    transition: 0.5s;
+  }
+
+  /* line 97, ../scss/desktop/_product.scss */
+  button {
+    width: 190px;
+    height: 50px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* line 105, ../scss/desktop/_product.scss */
+  button#btnClose {
+    margin-right: 18px;
+  }
+
+  /* line 110, ../scss/desktop/_product.scss */
+  #calculation {
+    margin-top: 20px;
+  }
+  /* line 113, ../scss/desktop/_product.scss */
+  #calculation #priceNote {
+    border-collapse: collapse;
+  }
+  /* line 116, ../scss/desktop/_product.scss */
+  #calculation #priceNote td {
+    padding-bottom: 10px;
+  }
+  /* line 120, ../scss/desktop/_product.scss */
+  #calculation #priceNote tr:last-child {
+    border-top: 1px solid #D8D8D8;
+  }
+  /* line 123, ../scss/desktop/_product.scss */
+  #calculation #priceNote tr:last-child td {
+    padding-top: 10px;
+  }
+  /* line 129, ../scss/desktop/_product.scss */
+  #calculation tr, #calculation td {
+    border: none;
+  }
+  /* line 137, ../scss/desktop/_product.scss */
+  #calculation .calculationRight {
+    text-align: right;
+    width: 190px;
+  }
+
+  /* line 143, ../scss/desktop/_product.scss */
+  .product-details {
+    float: left;
+    width: 815px;
+    margin-bottom: 25px;
+  }
+  /* line 148, ../scss/desktop/_product.scss */
+  .product-details .product-details-left {
+    float: left;
+    width: 398px;
+  }
+  /* line 152, ../scss/desktop/_product.scss */
+  .product-details .product-details-left #imgs {
+    background: #fff;
+    height: 398px;
+    width: 398px;
+    overflow: inherit;
+    max-height: 500px;
+    max-width: 398px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  /* line 163, ../scss/desktop/_product.scss */
+  .product-details .product-details-left #imgs img {
+    width: auto;
+    height: auto;
+    max-width: 379px;
+    max-height: 379px;
+  }
+  /* line 171, ../scss/desktop/_product.scss */
+  .product-details .product-details-left .starting-price {
+    font-size: 25px;
+    display: block;
+    text-align: center;
+    padding: 10px 0 30px 0;
+    color: #4D4D4D;
+  }
+  /* line 179, ../scss/desktop/_product.scss */
+  .product-details .product-details-left .colors div {
+    display: block;
+    float: left;
+    width: 45px;
+    height: 45px;
+    margin-right: 6px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  /* line 189, ../scss/desktop/_product.scss */
+  .product-details .product-details-left .colors span {
+    display: block;
+    width: 45px;
+    height: 45px;
+  }
+  /* line 195, ../scss/desktop/_product.scss */
+  .product-details .product-details-left .colors {
+    height: 45px;
+    margin-bottom: 18px;
+  }
+  /* line 201, ../scss/desktop/_product.scss */
+  .product-details .product-details-right {
+    float: left;
+    width: 398px;
+    margin-left: 19px;
+  }
+  /* line 206, ../scss/desktop/_product.scss */
+  .product-details .product-details-right h2 {
+    font-size: 26px;
+    padding-bottom: 10px;
+    line-height: 1.25;
+  }
+  /* line 211, ../scss/desktop/_product.scss */
+  .product-details .product-details-right h2 span {
+    font-size: 16px;
+  }
+
+  /* line 218, ../scss/desktop/_product.scss */
+  .product-sizes {
+    color: #4C4C4C;
+  }
+
+  /* line 222, ../scss/desktop/_product.scss */
+  .product-pricing, .have-questions {
+    padding: 5px 0;
+    margin-bottom: 30px;
+  }
+  /* line 226, ../scss/desktop/_product.scss */
+  .product-pricing table, .have-questions table {
+    width: 398px;
+    border: 1px solid #4D4D4D !important;
+    border-color: #4D4D4D;
+  }
+  /* line 231, ../scss/desktop/_product.scss */
+  .product-pricing table th, .product-pricing table td, .have-questions table th, .have-questions table td {
+    border-bottom: 1px solid #D8D8D8;
+    padding: 10px 15px;
+    text-align: center;
+  }
+  /* line 237, ../scss/desktop/_product.scss */
+  .product-pricing table th, .have-questions table th {
+    text-align: left !important;
+  }
+  /* line 241, ../scss/desktop/_product.scss */
+  .product-pricing table td, .have-questions table td {
+    vertical-align: top;
+    border-left: 1px solid #D9D9D9;
+  }
+  /* line 246, ../scss/desktop/_product.scss */
+  .product-pricing table tr:nth-child(2n) th, .product-pricing table tr:nth-child(2n) td, .have-questions table tr:nth-child(2n) th, .have-questions table tr:nth-child(2n) td {
+    border-bottom: 0;
+  }
+
+  /* line 253, ../scss/desktop/_product.scss */
+  .have-questions tr .table-upper {
+    background: #D8D8D8;
+    text-align: left;
+    font-weight: 600;
+  }
+  /* line 259, ../scss/desktop/_product.scss */
+  .have-questions tr:last-child td {
+    border-bottom: 1px solid #4D4D4D;
+    border-top: 1px solid #D8D8D8;
+  }
+  /* line 264, ../scss/desktop/_product.scss */
+  .have-questions tr td:first-child {
+    border-left: 1px solid #4D4D4D;
+  }
+  /* line 268, ../scss/desktop/_product.scss */
+  .have-questions .table-phone {
+    color: #84BD00;
+    text-align: center;
+    font-size: 20px;
+  }
+  /* line 274, ../scss/desktop/_product.scss */
+  .have-questions .table-phone a {
+    color: #84BD00;
+    text-align: center;
+    font-size: 20px;
+  }
+  /* line 279, ../scss/desktop/_product.scss */
+  .have-questions .table-phone a:hover {
+    text-decoration: underline;
+  }
+  /* line 285, ../scss/desktop/_product.scss */
+  .have-questions .table-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* line 291, ../scss/desktop/_product.scss */
+  .calculator {
+    margin-bottom: 40px;
+  }
+  /* line 294, ../scss/desktop/_product.scss */
+  .calculator .form-group-left, .calculator .form-group-right {
+    float: left;
+    width: 190px;
+  }
+  /* line 299, ../scss/desktop/_product.scss */
+  .calculator .form-group-left {
+    margin-right: 18px;
+  }
+  /* line 303, ../scss/desktop/_product.scss */
+  .calculator fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  /* line 309, ../scss/desktop/_product.scss */
+  .calculator label {
+    float: left;
+    width: 190px;
+    text-align: left;
+    padding-right: 15px;
+    line-height: 30px;
+    margin-bottom: 0.25em;
+  }
+  /* line 318, ../scss/desktop/_product.scss */
+  .calculator .form-control {
+    box-sizing: border-box;
+    width: 190px;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #F7F7F7;
+    border: 1px solid #b5b5b5;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 1em;
+  }
+  /* line 331, ../scss/desktop/_product.scss */
+  .calculator #price {
+    box-sizing: border-box;
+    width: 190px;
+    height: 50px;
+    background: #fff;
+    color: #BB29BB;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 7.5px 0 0 15px;
+  }
+
+  /* line 343, ../scss/desktop/_product.scss */
+  .btn-contact {
+    width: 190px;
+    height: 50px;
+    margin-top: 1.5em;
+  }
+
+  /* line 1, ../scss/desktop/_footer-new.scss */
+  footer {
+    color: white;
+    box-sizing: border-box;
+    clear: both;
+    border-top: 9px solid #BB29BB;
+    background-color: #23282D;
+    margin-top: 50px;
+    position: relative;
+  }
+
+  /* line 11, ../scss/desktop/_footer-new.scss */
+  .footer-container {
+    width: 1140px;
+    box-sizing: border-box;
+    padding: 40px 0;
+    margin: 0 auto;
+    min-height: 350px;
+    position: relative;
+  }
+  /* line 19, ../scss/desktop/_footer-new.scss */
+  .footer-container:before {
+    content: '';
+    width: 0;
+    height: 0;
+    transform: rotate(360deg);
+    border-style: solid;
+    border-width: 0 27.5px 30px 27.5px;
+    border-color: transparent transparent #BB29BB transparent;
+    position: absolute;
+    top: -38px;
+    margin-left: 50%;
+    left: -27.5px;
+  }
+  /* line 33, ../scss/desktop/_footer-new.scss */
+  .footer-container h1 {
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+  /* line 40, ../scss/desktop/_footer-new.scss */
+  .footer-container a {
+    color: #fff;
+    line-height: 1.6em;
+    font-size: 14px;
+  }
+  /* line 45, ../scss/desktop/_footer-new.scss */
+  .footer-container a:hover {
+    text-decoration: underline;
+  }
+  /* line 50, ../scss/desktop/_footer-new.scss */
+  .footer-container p {
+    font-weight: 300;
+    font-size: 14px;
+  }
+  /* line 55, ../scss/desktop/_footer-new.scss */
+  .footer-container .social-icon {
+    margin-right: 10px;
+  }
+  /* line 58, ../scss/desktop/_footer-new.scss */
+  .footer-container .social-icon a:hover {
+    text-decoration: none;
+  }
+  /* line 62, ../scss/desktop/_footer-new.scss */
+  .footer-container .social-icon img {
+    width: 47px;
+    height: 47px;
+  }
+  /* line 69, ../scss/desktop/_footer-new.scss */
+  .footer-container .footer-contact img {
+    height: 44px;
+    width: 34px;
+    margin-right: 10px;
+    float: left;
+  }
+  /* line 76, ../scss/desktop/_footer-new.scss */
+  .footer-container .footer-contact p {
+    padding-bottom: 15px;
+    line-height: 1.5em;
+  }
+  /* line 82, ../scss/desktop/_footer-new.scss */
+  .footer-container hr {
+    display: block;
+    box-sizing: content-box;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #B2B2B2;
+    padding-bottom: 15px;
+    width: 75%;
+    margin: 0 auto;
+  }
+  /* line 93, ../scss/desktop/_footer-new.scss */
+  .footer-container .footer-menu {
+    margin-bottom: 20px;
+    height: 127.5px;
+  }
+
+  /* line 99, ../scss/desktop/_footer-new.scss */
+  .footer-part {
+    box-sizing: border-box;
+    padding-right: 12px;
+    width: 25%;
+    float: left;
+  }
+
+  /* line 2, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note {
+    border: 1px solid #23282D;
+    box-sizing: border-box;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  /* line 8, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_toprow {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    margin: 20px 30px;
+  }
+  /* line 14, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_toprow .price_download {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  /* line 19, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_toprow .price_download a {
+    background: #84BD00;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    min-width: 110px;
+    width: fit-content;
+    padding: 0 20px;
+  }
+  /* line 28, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_toprow .price_logo {
+    width: 150px;
+  }
+  /* line 31, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_toprow .price_logo a img {
+    width: 100%;
+  }
+  /* line 38, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productname {
+    text-align: center;
+    text-transform: uppercase;
+  }
+  /* line 42, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productsmalldesc {
+    text-align: center;
+  }
+  /* line 45, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productdesc {
+    margin: 30px;
+  }
+  /* line 48, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productinfo {
+    display: grid;
+    justify-content: center;
+  }
+  /* line 52, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productinfo .price_productgallery {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000000;
+    margin: 30px auto;
+  }
+  /* line 59, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_productinfo .price_productdetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+  }
+  /* line 65, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_calculation {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 30px;
+    border: 1px solid #23282D;
+  }
+  /* line 72, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_informations {
+    display: flex;
+    justify-content: space-evenly;
+    border: 1px solid;
+    margin: 30px;
+    align-items: center;
+    padding-top: 20px;
+    color: #fff;
+    background: #23282D;
+  }
+  /* line 81, ../scss/desktop/_price_note.scss */
+  #PriceNoteModal .price_note .price_informations a {
+    color: #fff;
+  }
+
+  /* line 25, ../scss/_style-desktop.scss */
+  body {
+    background: black !important;
+    color: red !important;
+  }
+}
+/* line 32, ../scss/style.scss */
+body {
+  background: black !important;
+  color: white !important;
+}

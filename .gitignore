@@ -1,0 +1,84 @@
+# WordPress core (installed separately on each environment)
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/index.php
+/license.txt
+/readme.html
+/liesmich.html
+/xmlrpc.php
+
+# Local configuration and credentials
+/wp-config.php
+/.htaccess
+/.htaccess_*
+/apache-*-vhost.conf
+/setup-*-vhost.sh
+/.env
+/.env.*
+!/.env.example
+
+# WordPress runtime and public media
+/fileadmin/
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/temp/
+/wp-content/upgrade/
+/wp-content/backups/
+/wp-content/backup*/
+/wp-content/updraft/
+/wp-content/wflogs/
+/wp-content/ai1wm-backups/
+/wp-content/ewww/
+/wp-content/litespeed/
+/wp-content/debug.log
+/wp-content/advanced-cache.php
+/wp-content/object-cache.php
+/wp-content/wp-cache-config.php
+
+# Installed third-party WordPress packages and translations
+/wp-content/plugins/
+/wp-content/languages/
+/wp-content/themes/*
+!/wp-content/themes/lepuschitz_underscore/
+
+# Dependency directories (manifests and lock files remain tracked)
+**/vendor/
+**/node_modules/
+**/.sass-cache/
+**/.cache/
+coverage/
+.phpunit.result.cache
+
+# Generated catalogue data and binary import fixtures
+/products.xml
+/tools/testdata/*.xlsx
+/tools/testdata/*.xls
+/tools/testdata/*.csv
+/tools/testdata/*.xml
+
+# Database dumps, archives, logs and temporary files
+*.sql
+*.sql.gz
+*.dump
+*.log
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bak
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS and editor metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local agent metadata
+/.agents/
+/.codex/
