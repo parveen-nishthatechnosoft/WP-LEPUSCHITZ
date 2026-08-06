@@ -39,32 +39,40 @@ function ImportCatalog() {
         flush();
     }
 
-    $lCatalogId = $_GET['id'];
-    $lMandator = new LMandator(LMandator::ANDACOOL, LMandator::ANDACOOL_SCRAMBLED, LMandator::ANDACOOL_TYPE);
+    try {
+        $lCatalogId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        if ($lCatalogId <= 0) {
+            throw new InvalidArgumentException('Missing or invalid catalog ID.');
+        }
 
-    $lCatalog = new LCatalog('AndaCool Hauptkatalog', $lMandator, $lCatalogId);
+        $lMandator = new LMandator(LMandator::ANDACOOL, LMandator::ANDACOOL_SCRAMBLED, LMandator::ANDACOOL_TYPE);
 
-    $lCatalogReader = new LAndaCatalogReader($lMandator);
+        $lCatalog = new LCatalog('AndaCool Hauptkatalog', $lMandator, $lCatalogId);
 
-    // Read the data
-    if (TARGET == 'LIVE') {
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRODUCTSXMLURL, LCatalogReader::PRODUCTS);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRICESXMLURL, LCatalogReader::PRICES);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRINTSXMLURL, LCatalogReader::PRINTS);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::LABELSXMLURL, LCatalogReader::LABELS);
-    } else {
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRODUCTSXMLTESTFILE, LCatalogReader::PRODUCTS);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRICESXMLTESTFILE, LCatalogReader::PRICES);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRINTSXMLTESTFILE, LCatalogReader::PRINTS);
-        $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::LABELSXMLTESTFILE, LCatalogReader::LABELS);
+        $lCatalogReader = new LAndaCatalogReader($lMandator);
+
+        if (TARGET === 'LIVE') {
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRODUCTSXMLURL, LCatalogReader::PRODUCTS);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRICESXMLURL, LCatalogReader::PRICES);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRINTSXMLURL, LCatalogReader::PRINTS);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::LABELSXMLURL, LCatalogReader::LABELS);
+        } else {
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRODUCTSXMLTESTFILE, LCatalogReader::PRODUCTS);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRICESXMLTESTFILE, LCatalogReader::PRICES);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::PRINTSXMLTESTFILE, LCatalogReader::PRINTS);
+            $lCatalogReader->LoadFromFileOrUrl(LAndaCatalogReader::LABELSXMLTESTFILE, LCatalogReader::LABELS);
+        }
+
+        // Parse the data
+        $lCatalogReader->ParseData($lCatalog, 'sendMsg');
+
+        // Write the data
+        $lCatalogWriter = new LCatalogWriter($lMandator);
+        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+    } catch (Throwable $lException) {
+        error_log('Anda catalog import failed: ' . $lException->getMessage());
+        sendMsg('error', 'Import failed: ' . $lException->getMessage(), 0);
     }
-
-    // Parse the data
-    $lCatalogReader->ParseData($lCatalog, 'sendMsg');
-
-    // Write the data
-    $lCatalogWriter = new LCatalogWriter($lMandator);
-    $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
 }
 
 function ShowTools($aDebug) {

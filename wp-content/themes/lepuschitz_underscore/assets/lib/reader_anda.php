@@ -6,10 +6,10 @@ class LAndaCatalogReader extends LCatalogReader {
     public const PRINTSXMLURL = 'https://xml.andapresent.com/export/printingprices/HMS6EEYABH8WMPCEUVJJWFZWY32A78KPX2M7AV3X1ISLVQZX5QKUCVNSG8M3GLVE';
     public const LABELSXMLURL = 'https://xml.andapresent.com/export/labeling/de/HMS6EEYABH8WMPCEUVJJWFZWY32A78KPX2M7AV3X1ISLVQZX5QKUCVNSG8M3GLVE';
 
-    public const PRODUCTSXMLTESTFILE = '/var/virtual_www/lepuschitz-promotion/tools/testdata/products.xml';
-    public const PRICESXMLTESTFILE = '/var/virtual_www/lepuschitz-promotion/tools/testdata/prices.xml';
-    public const PRINTSXMLTESTFILE = '/var/virtual_www/lepuschitz-promotion/tools/testdata/printingprices.xml';
-    public const LABELSXMLTESTFILE = '/var/virtual_www/lepuschitz-promotion/tools/testdata/labeling.xml';
+    public const PRODUCTSXMLTESTFILE = __DIR__ . '/../../../../../tools/testdata/products.xml';
+    public const PRICESXMLTESTFILE = __DIR__ . '/../../../../../tools/testdata/prices.xml';
+    public const PRINTSXMLTESTFILE = __DIR__ . '/../../../../../tools/testdata/printingprices.xml';
+    public const LABELSXMLTESTFILE = __DIR__ . '/../../../../../tools/testdata/labeling.xml';
 
     private $_ProductsData = null;
     private $_PricesData = null;
@@ -23,9 +23,19 @@ class LAndaCatalogReader extends LCatalogReader {
      */
     public function LoadFromFileOrUrl(string $aFileName, string $aDataType) {
         // Load the file for XML parsing
-
-        // If http, use context
-        $lData = file_get_contents($aFileName);
+        $lData = @file_get_contents($aFileName);
+        if ($lData === false || trim($lData) === '') {
+            $lError = error_get_last();
+            $lReason = '';
+            if (!empty($lError['message']) && preg_match('/HTTP\/\S+\s+\d{3}\s+[^\r\n]+/', $lError['message'], $lMatch)) {
+                $lReason = ': ' . $lMatch[0];
+            }
+            throw new RuntimeException(sprintf(
+                'Could not load the Anda %s feed%s',
+                $aDataType,
+                $lReason
+            ));
+        }
 
         switch ($aDataType) {
             case $this::PRICES:
@@ -34,6 +44,7 @@ class LAndaCatalogReader extends LCatalogReader {
 
             case $this::PRINTS:
                 $this->_PrintsData = $lData;
+                break;
 
             case $this::LABELS:
                 $this->_LabelsData = $lData;

@@ -36,6 +36,11 @@ if (isset($_GET['debug']))
             document.getElementById("progress1").value = result.progress / 100;
             document.getElementById("status1").innerHTML = result.message;
 
+            if (result.message.indexOf("Import failed:") === 0) {
+                source.close();
+                return;
+            }
+
             if (result.message === "TERMINATE") {
                 source.close();
                 document.getElementById("progress1").value = 1;
