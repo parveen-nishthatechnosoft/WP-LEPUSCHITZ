@@ -1,6 +1,7 @@
 <?php
 
 class LAndaCatalogReader extends LCatalogReader {
+    private const IMPORT_PRICE_MULTIPLIER = 1.4;
     public const PRODUCTSXMLURL = 'https://xml.andapresent.com/export/products/de/HMS6EEYABH8WMPCEUVJJWFZWY32A78KPX2M7AV3X1ISLVQZX5QKUCVNSG8M3GLVE';
     public const PRICESXMLURL = 'https://xml.andapresent.com/export/prices/HMS6EEYABH8WMPCEUVJJWFZWY32A78KPX2M7AV3X1ISLVQZX5QKUCVNSG8M3GLVE';
     public const PRINTSXMLURL = 'https://xml.andapresent.com/export/printingprices/HMS6EEYABH8WMPCEUVJJWFZWY32A78KPX2M7AV3X1ISLVQZX5QKUCVNSG8M3GLVE';
@@ -139,9 +140,6 @@ class LAndaCatalogReader extends LCatalogReader {
             }
         }
 
-        // Read price markdown from options
-        $lPriceMarkdown = get_field('anda_import_markdown', 'option');
-
         // Now read all the prices
         $lPricesCount = 0;
         foreach ($lPricesXml->children() as $lPriceXml) {
@@ -194,8 +192,8 @@ class LAndaCatalogReader extends LCatalogReader {
             $lPriceString = (string)$lPriceXml->amount;
             $lPrice = floatval($lPriceString);
 
-            // Price calculation based on values in option or in category settings
-            $lBasePrice = round($lPrice * ((100 - $lPriceMarkdown) / 100), 2);
+            // Anda catalogue prices are supplier prices; apply the required 40% markup.
+            $lBasePrice = round($lPrice * self::IMPORT_PRICE_MULTIPLIER, 2);
 
             // Get the category rates
             $lPriceRates = $aCatalog->Categories->GetAndaPriceRates($lProduct->CategoryIdOrName);

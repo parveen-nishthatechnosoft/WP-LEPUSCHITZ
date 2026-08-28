@@ -166,7 +166,7 @@ function lepuschitz_scripts() {
 
     wp_enqueue_script('accordion_tree', get_template_directory_uri() . '/js/accordion.js', array(), '1.1', true);
     wp_enqueue_script('accordion_tree-mobi', get_template_directory_uri() . '/js/mobi/accordion-mobi.js', array(), '1.1', true);
-    wp_enqueue_script('price_calculator', get_template_directory_uri() . '/js/price_calculator.js', array(), '1.3', true);
+    wp_enqueue_script('price_calculator', get_template_directory_uri() . '/js/price_calculator.js', array(), '1.4', true);
     wp_enqueue_script('color_variants', get_template_directory_uri() . '/js/color_variants.js', array(), '1.1', true);
     wp_enqueue_script('catalog_interface.js', get_template_directory_uri() . '/js/catalog_interface.js', array(), '1.1', true);
 

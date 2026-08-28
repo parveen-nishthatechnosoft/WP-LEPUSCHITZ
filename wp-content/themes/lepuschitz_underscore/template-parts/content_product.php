@@ -70,10 +70,14 @@ $lCalculatorData->LowestPrice = (float)$lLowestPrice;
 $lCalculatorData->LowestPriceAmount = $lLowestPriceAmount;
 $lCalculatorData->SetupCostsPerColor = (float)$lSetupCostsPerColor;
 $lCalculatorData->MinimumOrderQuantity = (int)$lMinimumOrderQuantity;
-if ($lMandateType == LMandator::JUNG_TYPE)
+
+if ($lMandateType == LMandator::JUNG_TYPE) {
     $lCalculatorData->DisocuntPercentage = 3;
-else
+} elseif ($lMandateType == LMandator::ANDACOOL_TYPE || $lMandateType == LMandator::KP_TYPE) {
+    $lCalculatorData->DisocuntPercentage = 4;
+} else {
     $lCalculatorData->DisocuntPercentage = 6;
+}
 
 // Check if there is a calculator possible
 $lCalculatorData->EnableCalculator = ($lPositions != null) && (sizeof($lPositions) > 0);
@@ -141,7 +145,7 @@ if ($lCalculatorData->EnableCalculator) {
                     // Round to two digits
                     $lPrice = get_field('starting_price', $lProductID);
                     echo(number_format($lPrice, 2));
-                    ?>
+                ?>
                 </span>
 
                 <div class="colors">
@@ -410,8 +414,9 @@ if ($lCalculatorData->EnableCalculator) {
                             while ($query->have_posts()) {
                                 $query->the_post();
                                 if (get_field('parent') == $currentParent) {
-                                    if (get_the_ID() == $lProductID)
+                                    if (get_the_ID() == $lProductID) {
                                         continue;
+                                    }
                                     $lThumbnailImage = getProductThumbnail(get_the_ID());
                                     ?>
                                     <a href="<?php echo get_permalink() . "?product_id=" . get_the_ID(); ?>" class="gallery-element">
@@ -420,8 +425,9 @@ if ($lCalculatorData->EnableCalculator) {
                                     </a>
                                     <?php
                                 }
-                                if ($i == 7)
+                                if ($i == 7) {
                                     break;
+                                }
                                 $i++;
                             } ?>
                         </div>
@@ -480,7 +486,6 @@ if ($lCalculatorData->EnableCalculator) {
                             the_row();
 
                             echo get_sub_field('size') . " | ";
-
                         endwhile;
                     endif;
                     ?>
@@ -492,7 +497,6 @@ if ($lCalculatorData->EnableCalculator) {
                             the_row();
 
                             echo get_sub_field('color_name') . " | ";
-
                         endwhile;
                     endif;
                     ?>

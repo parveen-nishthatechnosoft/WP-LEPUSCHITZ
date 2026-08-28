@@ -4,6 +4,8 @@ use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class LKpCatalogReader extends LCatalogReader {
 
+    private const IMPORT_PRICE_MULTIPLIER = 1.4;
+
     private $_XlsxFileName = null;
 
     public function LoadFromFileOrUrl(string $aFileName, string $aDataType) {
@@ -20,7 +22,8 @@ class LKpCatalogReader extends LCatalogReader {
             throw new RuntimeException('The KP Plattner Excel file is missing or cannot be read.');
         }
 
-        $lProductMarkup = (100 + (float)get_field('kp_import_markup', 'option')) / 100;
+        // KP Plattner catalogue prices are supplier prices; apply the required 40% markup.
+        $lProductMarkup = self::IMPORT_PRICE_MULTIPLIER;
         $this->DoProgress($aProgressHandler, 1, 0, 'Reading Excel file');
         $lReader = ReaderEntityFactory::createXLSXReader();
         $lReader->open($this->_XlsxFileName);

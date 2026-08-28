@@ -3,23 +3,35 @@
  */
 var SelectedPositionIndexes = [];
 
-function InitCalculator() {
-    // Fill the first variables
-    //jQuery('#quantity').val(CalculatorData.LowestPriceAmount);
-    AddPosition(0);
+function PositionHasTechnologies(aPositionIndex) {
+    let lPosition = CalculatorData.Positions[aPositionIndex];
+    return lPosition && Array.isArray(lPosition.technologies) && lPosition.technologies.length > 0;
+}
 
-    // Recalculate
+function InitCalculator() {
+    // Only add printing controls when this product has a usable technology.
+    // Some imported products have positions without available technologies.
+    for (let lPositionIndex = 0; lPositionIndex < CalculatorData.Positions.length; lPositionIndex++) {
+        if (PositionHasTechnologies(lPositionIndex)) {
+            AddPosition(lPositionIndex);
+            break;
+        }
+    }
+
+    // Always calculate the product total, even when no printing is available.
     DoCalculation();
 }
 
 function AddPosition(aPositionIndex) {
     // Check if position already added
-    if (SelectedPositionIndexes.includes(aPositionIndex))
+    if (SelectedPositionIndexes.includes(aPositionIndex) || !PositionHasTechnologies(aPositionIndex))
         return;
 
     // Calculate the left positions
     var lPositionOptions = "<option value=\"\" disabled>Position wählen</option>\n";
     for (var lIndex = 0; lIndex < CalculatorData.Positions.length; lIndex++) {
+        if (!PositionHasTechnologies(lIndex))
+            continue;
         let lPosition = CalculatorData.Positions[lIndex];
         var lDisabled = "";
         var lSelected = "";
@@ -166,7 +178,9 @@ function ChangeDisabled() {
         var lCurrentPosition = parseInt(jQuery('#position' + lPosition + ' option:selected').val());
 
         // Enable all
-        for (lIndex = 0; lIndex < CalculatorData.Positions.length; lIndex++) {
+    for (lIndex = 0; lIndex < CalculatorData.Positions.length; lIndex++) {
+            if (!PositionHasTechnologies(lIndex))
+                continue;
             jQuery('#position' + lPosition + ' option[value="' + lIndex + '"]').prop('disabled', false);
         }
 
@@ -189,7 +203,10 @@ function ChangeDisabled() {
         // Check if last one
         if (lPositionIndex === SelectedPositionIndexes.length - 1) {
             // Is the last one, so show add button if more are possible
-            jQuery('#addbutton' + lPosition).toggle(lPositionIndex < CalculatorData.Positions.length - 1);
+            var lAvailablePositionCount = CalculatorData.Positions.filter(function (aPosition) {
+                return Array.isArray(aPosition.technologies) && aPosition.technologies.length > 0;
+            }).length;
+            jQuery('#addbutton' + lPosition).toggle(lPositionIndex < lAvailablePositionCount - 1);
         } else {
             // Hide add button
             jQuery('#addbutton' + lPosition).hide();
@@ -367,7 +384,7 @@ function DoCalculation() {
 function OnAddPositionClick(aSender) {
     // Find a free position to be added
     for (lIndex = 0; lIndex < CalculatorData.Positions.length; lIndex++) {
-        if (!SelectedPositionIndexes.includes(lIndex)) {
+        if (PositionHasTechnologies(lIndex) && !SelectedPositionIndexes.includes(lIndex)) {
             AddPosition(lIndex);
         }
     }
