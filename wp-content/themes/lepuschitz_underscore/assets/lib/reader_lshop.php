@@ -33,7 +33,10 @@ class LLshopCatalogReader extends LCatalogReader {
         set_time_limit(0);
 
         $lProductMarkUp = (100 + get_field('lshop_import_markup', 'option')) / 100;
-        $lTechnologyMarkup = $lProductMarkUp;
+
+        if (empty($this->_XlsxFileName) || !is_readable($this->_XlsxFileName)) {
+            throw new RuntimeException('The L-Shop Excel file is missing or cannot be read.');
+        }
 
         // Read the data
         $this->DoProgress($aProgressHandler, 1, 0, "Reading excel file");
@@ -42,10 +45,16 @@ class LLshopCatalogReader extends LCatalogReader {
         $this->DoProgress($aProgressHandler, 1, 1, "Reading finished");
 
         // Get the main sheet
-        foreach ($lXlsxReader->getSheetIterator() as $lSpreadsheet) {
-            // Take the first one
-            if ($lSpreadsheet->getName() === 'Items')
+        $lSpreadsheet = null;
+        foreach ($lXlsxReader->getSheetIterator() as $lSheet) {
+            if ($lSheet->getName() === 'Items') {
+                $lSpreadsheet = $lSheet;
                 break;
+            }
+        }
+        if ($lSpreadsheet === null) {
+            $lXlsxReader->close();
+            throw new RuntimeException('The L-Shop workbook must contain a worksheet named "Items".');
         }
 
         // Get number of rows
@@ -156,9 +165,10 @@ class LLshopCatalogReader extends LCatalogReader {
         $lFileLink = $aCollectionName . '/' . $aFolder . '/' . $aFileName;
 
         // Try the loading twice if once failed
-        $lFirstTry = true;
+        $lAttempts = 0;
         $lResult = false;
-        while (!$lFirstTry) {
+        while ($lAttempts < 2) {
+            $lAttempts++;
             // Create temp file
             $lTempFile = fopen($lFileName, 'w+');
 
@@ -217,8 +227,6 @@ class LLshopCatalogReader extends LCatalogReader {
             if ($lResult)
                 break;
 
-            // Try it a second time if failed
-            $lFirstTry = false;
         }
 
         // Remember as already tried or loaded

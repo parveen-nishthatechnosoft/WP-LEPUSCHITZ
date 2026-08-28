@@ -82,11 +82,14 @@ class LCatalogWriter {
                 if ($lIsNewProduct) {
                     $this->CreateNewProduct($lProduct, $aCatalog);
                 } else {
+                    // Older imports may have omitted this link; it is required
+                    // later to resolve the catalogue's technologies and pricing.
+                    update_post_meta($productPostId, 'catalog_Id', $aCatalog->Id);
                     $lHashSum = (string)$lProduct->HashSum;
                     $currentHashSum = get_post_field('hash_sum', $productPostId);
 
                     if ($lHashSum != $currentHashSum) {
-                        $this->UpdateProduct($productPostId, $lProduct);
+                        $this->UpdateProduct($productPostId, $lProduct, $aCatalog);
                     }
                 }
             }
@@ -131,11 +134,14 @@ class LCatalogWriter {
             if ($lIsNewTechnology) {
                 $this->CreateNewTechnology($lTechnology, $aCatalog);
             } else {
+                // Keep existing technologies associated with their catalogue so
+                // AddPositions can resolve and attach them to each product.
+                update_post_meta($techPostId, 'catalog_Id', $aCatalog->Id);
                 $lHashSum = (string)$lTechnology->HashSum;
                 $currentHashSum = get_post_field('hash_sum', $techPostId);
 
                 if ($lHashSum != $currentHashSum)
-                    $this->UpdateTechnology($techPostId, $lTechnology);
+                    $this->UpdateTechnology($techPostId, $lTechnology, $aCatalog);
             }
         }
         $this->DoProgress($aProgressHandler, $lTotalNumberOfLoops, $lCurrentNumberOfLoops, "Finished importing $lTechnologiesCount technologies.");
@@ -333,7 +339,7 @@ class LCatalogWriter {
         }
     }
 
-    private function UpdateTechnology($post_id, LTechnologyCosts $aTechnology) {
+    private function UpdateTechnology($post_id, LTechnologyCosts $aTechnology, LCatalog $aCatalog) {
         // Increase time limit
         set_time_limit(10);
 
@@ -345,6 +351,7 @@ class LCatalogWriter {
         update_post_meta($post_id, 'size_from', (string)$aTechnology->SizeFrom);
         update_post_meta($post_id, 'size_to', (string)$aTechnology->SizeTo);
         update_post_meta($post_id, 'mandatorid', $this->Mandator->Id);
+        update_post_meta($post_id, 'catalog_Id', $aCatalog->Id);
 
         $oldRanges = get_field('ranges', $post_id);
         if ($oldRanges) {
@@ -353,13 +360,13 @@ class LCatalogWriter {
             }
         }
 
-        foreach ($aTechnology->Ranges as $aRange) {
+        foreach ($aTechnology->Ranges->Ranges as $aRange) {
             $row = array(
                 'number_of_colors' => (string)$aRange->NumberOfColors,
-                'quantity_from' => (string)$aRange->From,
-                'quantity_to' => (string)$aRange->To,
+                'quantity_from' => (string)$aRange->QuantityFrom,
+                'quantity_to' => (string)$aRange->QuantityTo,
                 'unit_price' => (string)$aRange->UnitPrice,
-                'setup_cost' => (string)$aRange->SetupPrice
+                'setup_cost' => (string)$aRange->SetupPricePerColor
             );
             add_row('ranges', $row, $post_id);
         }
@@ -444,7 +451,7 @@ class LCatalogWriter {
      * @param $aProduct
      * If already existing product, this function updates the product data
      */
-    private function UpdateProduct($post_id, LProduct $aProduct) {
+    private function UpdateProduct($post_id, LProduct $aProduct, LCatalog $aCatalog) {
         // Increase time limit
         set_time_limit(15);
 
@@ -452,6 +459,7 @@ class LCatalogWriter {
         update_post_meta($post_id, 'product_id', $aProduct->ProductCode);
         update_post_meta($post_id, 'isActive', true);
         update_post_meta($post_id, 'has_deal', 'No');
+        update_post_meta($post_id, 'catalog_Id', $aCatalog->Id);
 
         $parentId = $aProduct->CategoryIdOrName;
 
@@ -590,13 +598,17 @@ class LCatalogWriter {
             $lTechnologyPostIds = get_posts(array(
                 'fields' => 'ids',
                 'posts_per_page' => -1,
-                'post_type' => 'technology'
+                'post_type' => 'technology',
+                'meta_key' => 'catalog_Id',
+                'meta_value' => $aCatalog->Id
             ));
 
             $lProductPostIds = get_posts(array(
                 'fields' => 'ids',
                 'posts_per_page' => -1,
-                'post_type' => 'product'
+                'post_type' => 'product',
+                'meta_key' => 'catalog_Id',
+                'meta_value' => $aCatalog->Id
             ));
 
             $lNumberOfLoops = sizeof($lTechnologyPostIds) + sizeof($lProductPostIds);

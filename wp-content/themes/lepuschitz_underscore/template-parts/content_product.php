@@ -80,11 +80,10 @@ if ($lMandateType == LMandator::JUNG_TYPE) {
 }
 
 // Check if there is a calculator possible
-$lCalculatorData->EnableCalculator = ($lPositions != null) && (sizeof($lPositions) > 0);
+$lCalculatorData->Positions = is_array($lPositions) ? $lPositions : [];
+$lCalculatorData->EnableCalculator = !empty($lRates);
 
 if ($lCalculatorData->EnableCalculator) {
-    $lCalculatorData->Positions = $lPositions;
-
     // Add the technology cost ranges
     foreach ($lCalculatorData->Positions as &$lPosition) {
         foreach ($lPosition['technologies'] as &$lTechnology) {
