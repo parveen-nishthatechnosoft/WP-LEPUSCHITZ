@@ -22,6 +22,12 @@ class LProduct {
      */
     public $CatalogCode;
     /**
+     * Supplier catalogue/model number. Used by the L-Shop importer.
+     *
+     * @var string|null
+     */
+    public $SupplierProductNumber;
+    /**
      * @var string Description for the product (HTML)
      */
     public $Description;

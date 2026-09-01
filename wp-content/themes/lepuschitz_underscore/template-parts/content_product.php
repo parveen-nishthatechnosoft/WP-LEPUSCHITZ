@@ -56,6 +56,13 @@ $lCatalogId = get_field('catalog_Id', $lProductID);
 $lMandatorId = get_field('catalog_mandantId', $lCatalogId);
 $lMandateType = get_field('mandate-type', $lMandatorId);
 $lMandatorPreprintCostsPrefix = LMandator::GetMandatorPrefixByType($lMandateType);
+$lLshopCatalogNumber = '';
+if ($lMandateType === LMandator::LSHOP_TYPE) {
+    $lLshopCatalogNumber = trim((string)get_post_meta($lProductID, 'lshop_catalog_number', true));
+    if ($lLshopCatalogNumber === '') {
+        $lLshopCatalogNumber = trim((string)get_field('product_id', $lProductID));
+    }
+}
 
 $lSetupCostsPerColor = get_field($lMandatorPreprintCostsPrefix . 'preprintcosts', $lSubcategoryId);
 if (empty($lSetupCostsPerColor)) {
@@ -245,6 +252,9 @@ if ($lCalculatorData->EnableCalculator) {
                 <p class="product-description">
                     <?php the_field('description', $lProductID); ?>
                 </p>
+                <?php if ($lLshopCatalogNumber !== '') { ?>
+                    <p class="product-number">Produkt-Nummer: <?php echo esc_html($lLshopCatalogNumber); ?></p>
+                <?php } ?>
 
                 <p class="product-sizes">
                     <?php

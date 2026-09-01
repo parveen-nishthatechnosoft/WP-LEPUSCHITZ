@@ -404,6 +404,9 @@ class LCatalogWriter {
         update_post_meta($post_id, 'product_id', $aProduct->ProductCode);
         update_post_meta($post_id, 'isActive', true);
         update_post_meta($post_id, 'has_deal', 'No');
+        if ($aCatalog->Mandator->Type === LMandator::LSHOP_TYPE) {
+            update_post_meta($post_id, 'lshop_catalog_number', (string)$aProduct->SupplierProductNumber);
+        }
         update_post_meta($post_id, 'source_image', (string)$this->DownloadFile($aProduct->ImageUrl, $post_id));
         update_post_meta($post_id, 'description', (string)$aProduct->Description);
         update_post_meta($post_id, 'starting_price', (string)$aProduct->GetLowestPrice());
@@ -460,6 +463,9 @@ class LCatalogWriter {
         update_post_meta($post_id, 'isActive', true);
         update_post_meta($post_id, 'has_deal', 'No');
         update_post_meta($post_id, 'catalog_Id', $aCatalog->Id);
+        if ($aCatalog->Mandator->Type === LMandator::LSHOP_TYPE) {
+            update_post_meta($post_id, 'lshop_catalog_number', (string)$aProduct->SupplierProductNumber);
+        }
 
         $parentId = $aProduct->CategoryIdOrName;
 

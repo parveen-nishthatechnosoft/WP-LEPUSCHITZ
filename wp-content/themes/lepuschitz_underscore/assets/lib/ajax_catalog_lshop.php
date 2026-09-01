@@ -57,28 +57,32 @@ function ImportCatalog() {
         flush();
     }
 
-    // Check if file is given
-    $lXlsxFile = $_GET['tempFile'];
+    $lXlsxFile = null;
+    try {
+        if (!current_user_can('administrator')) {
+            throw new RuntimeException('Administrator permission is required.');
+        }
+        if (empty($_GET['tempFile']) || empty($_GET['id'])) {
+            throw new RuntimeException('The uploaded file or catalogue ID is missing.');
+        }
 
-    $lCatalogId = $_GET['id'];
-    $lMandator = new LMandator(LMandator::LSHOP, LMandator::LSHOP_SCRAMBLED, LMandator::LSHOP_TYPE);
+        $lXlsxFile = $_GET['tempFile'];
+        $lCatalogId = (int)$_GET['id'];
+        $lMandator = new LMandator(LMandator::LSHOP, LMandator::LSHOP_SCRAMBLED, LMandator::LSHOP_TYPE);
+        $lCatalog = new LCatalog('L-Shop Hauptkatalog', $lMandator, $lCatalogId);
+        $lCatalogReader = new LLshopCatalogReader($lMandator);
+        $lCatalogReader->LoadFromFileOrUrl($lXlsxFile, LCatalogReader::ALL);
+        $lCatalogReader->ParseData($lCatalog, 'sendMsg');
 
-    $lCatalog = new LCatalog('L-Shop Hauptkatalog', $lMandator, $lCatalogId);
-
-    $lCatalogReader = new LLshopCatalogReader($lMandator);
-
-    // Read the data
-    $lCatalogReader->LoadFromFileOrUrl($lXlsxFile, LCatalogReader::ALL);
-
-    // Parse the data
-    $lCatalogReader->ParseData($lCatalog, 'sendMsg');
-
-    // Remove temp file
-    unlink($lXlsxFile);
-
-    // Write the data
-    $lCatalogWriter = new LCatalogWriter($lMandator);
-    $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        $lCatalogWriter = new LCatalogWriter($lMandator);
+        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+    } catch (Throwable $lException) {
+        sendMsg(-1, 'ERROR: ' . $lException->getMessage(), 0);
+    } finally {
+        if ($lXlsxFile !== null && is_file($lXlsxFile)) {
+            unlink($lXlsxFile);
+        }
+    }
 }
 
 function ShowTools($aDebug) {

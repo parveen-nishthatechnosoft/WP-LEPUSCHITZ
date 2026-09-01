@@ -148,7 +148,7 @@ function lepuschitz_scripts() {
             'lepuschitz-catalog-tools',
             get_template_directory_uri() . '/css/catalog-tools.css',
             array('lepuschitz-style'),
-            '1.0.0'
+            '1.1.0'
         );
     }
 

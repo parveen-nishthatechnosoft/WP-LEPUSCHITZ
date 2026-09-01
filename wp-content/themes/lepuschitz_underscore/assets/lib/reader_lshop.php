@@ -57,6 +57,21 @@ class LLshopCatalogReader extends LCatalogReader {
             throw new RuntimeException('The L-Shop workbook must contain a worksheet named "Items".');
         }
 
+        $lHeaderNames = [];
+        foreach ($lSpreadsheet->getRowIterator() as $lHeaderRow) {
+            foreach ($lHeaderRow->getCells() as $lHeaderCell) {
+                $lHeaderNames[] = trim((string)$lHeaderCell->getValue());
+            }
+            break;
+        }
+        if (!in_array('EK', $lHeaderNames, true)) {
+            $lXlsxReader->close();
+            if (in_array('ArticleNr', $lHeaderNames, true) && in_array('CatalogNr', $lHeaderNames, true)) {
+                throw new RuntimeException('This is an L-Shop item-data export without prices. Please export the price file that includes the "EK" column and import that file instead.');
+            }
+            throw new RuntimeException('The L-Shop workbook is missing the required "EK" price column.');
+        }
+
         // Get number of rows
         $lNumberOfRows = 0; // $lSheetData-> getHighestRow() - 1;
         $this->DoProgress($aProgressHandler, 1, 0, "Calculating rows");
@@ -98,6 +113,7 @@ class LLshopCatalogReader extends LCatalogReader {
             if (!$aCatalog->Products->ExistsProductCode($lArticleNumber)) {
                 // Create a new product
                 $lNewProduct = $aCatalog->Products->AddProduct($lArticleNumber, $lCells[48]->getValue());
+                $lNewProduct->SupplierProductNumber = trim((string)$lCells[1]->getValue());
                 $lNewProduct->Description = $lCells[49]->getValue();
                 $lNewProduct->ImageUrl = $lImageFileForProductUrl;
 
@@ -115,8 +131,9 @@ class LLshopCatalogReader extends LCatalogReader {
                 }
                 $lNewProduct->AddPrice(round($lCells[2]->getValue() * $lProductMarkUp, 2));
 
-                // Try to find the category/subcategory
-                $lNewProduct->CategoryIdOrName = $lCells[50]->getValue();
+                // The L-Shop export's Product column (BD / zero-based index 55)
+                // is the usable product category for the catalogue mapping.
+                $lNewProduct->CategoryIdOrName = $lCells[55]->getValue();
                 $lNewProduct->GroupIdOrName = $lCells[51]->getValue();
             } else {
                 // Add additional colors if needed
