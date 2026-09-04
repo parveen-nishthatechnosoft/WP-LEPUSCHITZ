@@ -231,8 +231,14 @@ class LRoemerCatalogReader extends LCatalogReader {
                 $lCells = LCatalogReader::PhpOfficeGetCellsFromRow($lRow);
 
                 // Create the product
-                $lArticleNumber = $lCells[1];
-                $lArticleName = $lCells[8];
+                $lArticleNumber = trim((string)($lCells[1] ?? ''));
+                $lArticleName = trim((string)($lCells[8] ?? ''));
+
+                // Ignore blank/footer rows or incomplete article records
+                // instead of passing a null SKU into ExistsProductCode().
+                if ($lArticleNumber === '' || $lArticleName === '') {
+                    continue;
+                }
 
                 // Check if article-number begins with specific string, then skip
                 $lSkipStrings = [
@@ -300,6 +306,14 @@ class LRoemerCatalogReader extends LCatalogReader {
                     $lExistingProduct = $aCatalog->Products->GetProductByProductTitle($lArticleName);
                 }
             }
+        }
+
+        // The writer uses this completed representation to detect data
+        // changes. It must be calculated only after all article details,
+        // prices, and labels have been collected.
+        foreach ($aCatalog->Products->Products as $lProduct) {
+            $lProduct->HashSum = null;
+            $lProduct->HashSum = md5(json_encode($lProduct));
         }
     }
 

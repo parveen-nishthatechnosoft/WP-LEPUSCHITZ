@@ -68,7 +68,9 @@ function ImportCatalog() {
 
         // Write the data
         $lCatalogWriter = new LCatalogWriter($lMandator);
-        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        // Synchronize products without deleting their posts, preserving IDs
+        // and any related sales or order history.
+        $lCatalogWriter->SaveCatalog($lCatalog, false, 'sendMsg', true);
     } catch (Throwable $lException) {
         error_log('Anda catalog import failed: ' . $lException->getMessage());
         sendMsg('error', 'Import failed: ' . $lException->getMessage(), 0);

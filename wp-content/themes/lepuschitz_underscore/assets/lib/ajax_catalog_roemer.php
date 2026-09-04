@@ -120,7 +120,9 @@ function ImportCatalog() {
         }
 
         $lCatalogWriter = new LCatalogWriter($lMandator);
-        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        // Synchronize instead of replacing the catalogue. Existing product IDs
+        // must remain intact for sales and order history.
+        $lCatalogWriter->SaveCatalog($lCatalog, false, 'sendMsg', true);
     } catch (Throwable $lException) {
         sendMsg(-1, 'ERROR: ' . $lException->getMessage(), 0);
     } finally {

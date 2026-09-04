@@ -23,12 +23,43 @@ if (isset($_GET['tool'])) {
 }
 
 function UploadFile() {
-    // Check if file is given
+    header('Content-Type: application/json');
+    if (!current_user_can('administrator')) {
+        http_response_code(403);
+        echo json_encode(['Success' => false, 'Message' => 'Administrator permission is required.']);
+        return;
+    }
+    if (!isset($_FILES['xlsx']) || $_FILES['xlsx']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(['Success' => false, 'Message' => 'The XLSX upload did not complete successfully.']);
+        return;
+    }
+
     $lXlsxFile = $_FILES['xlsx']['tmp_name'];
+    $lZip = new ZipArchive();
+    if ($lZip->open($lXlsxFile) !== true
+        || $lZip->locateName('xl/workbook.xml') === false
+        || $lZip->locateName('xl/_rels/workbook.xml.rels') === false) {
+        if ($lZip->numFiles > 0) {
+            $lZip->close();
+        }
+        http_response_code(400);
+        echo json_encode([
+            'Success' => false,
+            'Message' => 'The selected file is not a complete XLSX workbook. Please export the L-Shop price file again and upload the original .xlsx file.'
+        ]);
+        return;
+    }
+    $lZip->close();
 
     // Save the file to temp folder
     $lMandator = new LMandator(LMandator::LSHOP, LMandator::LSHOP_SCRAMBLED, LMandator::LSHOP_TYPE);
     $lTempFileName = $lMandator->SaveFileToTempFile($lXlsxFile);
+    if ($lTempFileName === false || !is_file($lTempFileName) || filesize($lTempFileName) === 0) {
+        http_response_code(500);
+        echo json_encode(['Success' => false, 'Message' => 'The server could not store the uploaded workbook.']);
+        return;
+    }
 
     $lResult = new stdClass();
     $lResult->Success = true;
@@ -75,7 +106,9 @@ function ImportCatalog() {
         $lCatalogReader->ParseData($lCatalog, 'sendMsg');
 
         $lCatalogWriter = new LCatalogWriter($lMandator);
-        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        // Synchronize products without deleting their posts, preserving IDs
+        // and any related sales or order history.
+        $lCatalogWriter->SaveCatalog($lCatalog, false, 'sendMsg', true);
     } catch (Throwable $lException) {
         sendMsg(-1, 'ERROR: ' . $lException->getMessage(), 0);
     } finally {

@@ -78,7 +78,9 @@ function ImportCatalog() {
 
     // Write the data
     $lCatalogWriter = new LCatalogWriter($lMandator);
-    $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+    // A JUNG import is a synchronization, not a replacement.  Keeping the
+    // existing posts preserves their IDs and any sales/order references.
+    $lCatalogWriter->SaveCatalog($lCatalog, false, 'sendMsg', true);
 }
 
 function ShowTools($aDebug) {

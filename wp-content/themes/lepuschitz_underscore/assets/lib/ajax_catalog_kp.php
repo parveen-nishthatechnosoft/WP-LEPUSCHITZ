@@ -119,7 +119,9 @@ function ImportCatalog() {
         }
 
         $lCatalogWriter = new LCatalogWriter($lMandator);
-        $lCatalogWriter->SaveCatalog($lCatalog, true, 'sendMsg');
+        // Keep existing products and their IDs; missing products are drafted
+        // by the synchronization pass instead of being deleted.
+        $lCatalogWriter->SaveCatalog($lCatalog, false, 'sendMsg', true);
     } catch (Throwable $lException) {
         sendMsg(-1, 'ERROR: ' . $lException->getMessage(), 0);
     } finally {

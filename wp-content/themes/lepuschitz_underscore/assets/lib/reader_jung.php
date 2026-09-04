@@ -83,6 +83,13 @@ class LJungCatalogReader extends LCatalogReader {
             }
         }
 
+        // Hash the completed product, after all of its variants have been
+        // collected.  This lets the writer update only changed products.
+        foreach ($aCatalog->Products->Products as $lProduct) {
+            $lProduct->HashSum = null;
+            $lProduct->HashSum = md5(json_encode($lProduct));
+        }
+
         $lSpreadsheet->disconnectWorksheets();
         unset($lSpreadsheet);
     }

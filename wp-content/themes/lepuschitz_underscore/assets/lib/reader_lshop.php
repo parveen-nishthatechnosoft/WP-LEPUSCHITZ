@@ -18,6 +18,7 @@ class LLshopCatalogReader extends LCatalogReader {
                 $this->_XlsxFileName = $aFileName;
                 break;
         }
+
     }
 
     /**
@@ -152,6 +153,13 @@ class LLshopCatalogReader extends LCatalogReader {
                     }
                 }
             }
+        }
+
+        // Hash completed products after every variant has been collected, so
+        // the writer updates an existing product only when its data changes.
+        foreach ($aCatalog->Products->Products as $lProduct) {
+            $lProduct->HashSum = null;
+            $lProduct->HashSum = md5(json_encode($lProduct));
         }
     }
 

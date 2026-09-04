@@ -65,6 +65,13 @@ class LKpCatalogReader extends LCatalogReader {
             }
         }
 
+        // Hash the completed product after all variants, prices, and printing
+        // data have been added, so the writer can detect genuine changes.
+        foreach ($aCatalog->Products->Products as $lProduct) {
+            $lProduct->HashSum = null;
+            $lProduct->HashSum = md5(json_encode($lProduct));
+        }
+
         $lReader->close();
     }
 

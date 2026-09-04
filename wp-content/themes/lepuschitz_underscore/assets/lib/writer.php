@@ -30,13 +30,20 @@ class LCatalogWriter {
     /**
      * @param LCatalog $aCatalog
      */
-    public function SaveCatalog(LCatalog $aCatalog, bool $aDeleteAll = false, $aProgressHandler = null) {
+    public function SaveCatalog(LCatalog $aCatalog, bool $aDeleteAll = false, $aProgressHandler = null, bool $aSyncMissingProducts = false) {
         // Get the numbers of actions to be done
         $lTotalNumberOfProducts = sizeof($aCatalog->Products->Products);
         $lTotalNumberOfTechnologies = sizeof($aCatalog->Technologies->Technologies);
         $lTotalNumberOfLabelings = sizeof($aCatalog->Labelings->Labels);
         $lTotalNumberOfLoops = $lTotalNumberOfProducts + $lTotalNumberOfTechnologies + $lTotalNumberOfLabelings;
         $lCurrentNumberOfLoops = 0;
+        $lImportRunId = $aSyncMissingProducts ? wp_generate_uuid4() : null;
+        $lImportTimestamp = $aSyncMissingProducts ? current_time('mysql') : null;
+        $lCreatedProducts = 0;
+        $lUpdatedProducts = 0;
+        $lUnchangedProducts = 0;
+        $lReactivatedProducts = 0;
+        $lAutoDraftedProducts = 0;
 
         // Check if everything should be deleted before
         if ($aDeleteAll) {
@@ -57,8 +64,18 @@ class LCatalogWriter {
 
             $args = array(
                 'post_type' => 'product',
-                'meta_key' => 'product_id',
-                'meta_value' => $lProduct->ProductCode
+                'post_status' => 'any',
+                'meta_query' => array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'product_id',
+                        'value' => $lProduct->ProductCode
+                    ),
+                    array(
+                        'key' => 'catalog_Id',
+                        'value' => $aCatalog->Id
+                    )
+                )
             );
 
             $post_query = new WP_Query($args);
@@ -71,6 +88,25 @@ class LCatalogWriter {
                 break;
             }
 
+            // Record that existing products were present in the supplier file
+            // before checking whether all data needed for an update exists.
+            // A supplier product with an incomplete price/category mapping must
+            // not be drafted merely because it cannot be updated this run.
+            if (!$lIsNewProduct && $aSyncMissingProducts) {
+                update_post_meta($productPostId, 'catalog_Id', $aCatalog->Id);
+                update_post_meta($productPostId, 'import_last_seen_at', $lImportTimestamp);
+                update_post_meta($productPostId, 'import_last_seen_run', $lImportRunId);
+
+                // Only restore products this importer drafted. A draft without
+                // this marker remains a deliberate manual decision.
+                if (get_post_status($productPostId) === 'draft'
+                    && get_post_meta($productPostId, 'availability_status', true) === 'auto_drafted_missing_from_import') {
+                    wp_update_post(array('ID' => $productPostId, 'post_status' => 'publish'));
+                    update_post_meta($productPostId, 'availability_status', 'active');
+                    $lReactivatedProducts++;
+                }
+            }
+
             // Check if there is no colors
             if (sizeof($lProduct->Colors) == 0) {
                 // Add dummy color
@@ -80,21 +116,50 @@ class LCatalogWriter {
             // Check if there is a price
             if ((sizeof($lProduct->Prices) > 0) && ($lProduct->CategoryIdOrName != null)) {
                 if ($lIsNewProduct) {
-                    $this->CreateNewProduct($lProduct, $aCatalog);
+                    $lNewProductId = $this->CreateNewProduct($lProduct, $aCatalog);
+                    if ($aSyncMissingProducts && $lNewProductId) {
+                        update_post_meta($lNewProductId, 'import_last_seen_at', $lImportTimestamp);
+                        update_post_meta($lNewProductId, 'import_last_seen_run', $lImportRunId);
+                        update_post_meta($lNewProductId, 'availability_status', 'active');
+                    }
+                    $lCreatedProducts++;
                 } else {
                     // Older imports may have omitted this link; it is required
                     // later to resolve the catalogue's technologies and pricing.
                     update_post_meta($productPostId, 'catalog_Id', $aCatalog->Id);
                     $lHashSum = (string)$lProduct->HashSum;
-                    $currentHashSum = get_post_field('hash_sum', $productPostId);
+                    $currentHashSum = (string)get_post_meta($productPostId, 'hash_sum', true);
 
                     if ($lHashSum != $currentHashSum) {
                         $this->UpdateProduct($productPostId, $lProduct, $aCatalog);
+                        $lUpdatedProducts++;
+                    } else {
+                        $lUnchangedProducts++;
                     }
                 }
             }
         }
-        $this->DoProgress($aProgressHandler, $lTotalNumberOfLoops, $lCurrentNumberOfLoops, "Finished importing $lNumberOfProducts products.");
+        if ($aSyncMissingProducts) {
+            // Products absent from a complete supplier file are retained as
+            // drafts, so their IDs and historical sales data remain intact.
+            $lCatalogProductIds = get_posts(array(
+                'fields' => 'ids',
+                'posts_per_page' => -1,
+                'post_type' => 'product',
+                'post_status' => 'publish',
+                'meta_key' => 'catalog_Id',
+                'meta_value' => $aCatalog->Id
+            ));
+            foreach ($lCatalogProductIds as $lMissingProductId) {
+                if (get_post_meta($lMissingProductId, 'import_last_seen_run', true) === $lImportRunId) {
+                    continue;
+                }
+                wp_update_post(array('ID' => $lMissingProductId, 'post_status' => 'draft'));
+                update_post_meta($lMissingProductId, 'availability_status', 'auto_drafted_missing_from_import');
+                $lAutoDraftedProducts++;
+            }
+        }
+        $this->DoProgress($aProgressHandler, $lTotalNumberOfLoops, $lCurrentNumberOfLoops, "Finished importing $lNumberOfProducts products. Created: $lCreatedProducts, updated: $lUpdatedProducts, unchanged: $lUnchangedProducts, reactivated: $lReactivatedProducts, drafted: $lAutoDraftedProducts.");
 
         // Do technologies now
         $lTechnologiesCount = 0;
@@ -447,6 +512,8 @@ class LCatalogWriter {
 
             add_row('variants', $row_variant, $post_id);
         }
+
+        return $post_id;
     }
 
     /**
@@ -457,6 +524,15 @@ class LCatalogWriter {
     private function UpdateProduct($post_id, LProduct $aProduct, LCatalog $aCatalog) {
         // Increase time limit
         set_time_limit(15);
+
+        // Meta updates alone do not refresh WordPress's post_modified value.
+        // Update the post as well so the product's changed-at timestamp is
+        // meaningful in the admin and reporting views.
+        wp_update_post(array(
+            'ID' => $post_id,
+            'post_title' => $aProduct->Title,
+            'post_name' => sanitize_title($aProduct->Title)
+        ));
 
         update_post_meta($post_id, 'hash_sum', $aProduct->HashSum);
         update_post_meta($post_id, 'product_id', $aProduct->ProductCode);
@@ -486,7 +562,7 @@ class LCatalogWriter {
         LDeleteImages::DeleteImage(get_post_field('source_image', $post_id));
         update_post_meta($post_id, 'source_image', (string)$this->DownloadFile($aProduct->ImageUrl, $post_id));
 
-        update_post_meta($post_id, 'description', (string)$aProduct->Description[0]);
+        update_post_meta($post_id, 'description', (string)$aProduct->Description);
         update_post_meta($post_id, 'starting_price', (string)$aProduct->GetLowestPrice());
         update_post_meta($post_id, 'minimum_order_quantity', (string)$aProduct->MimimumQuantity);
 
@@ -532,6 +608,8 @@ class LCatalogWriter {
             );
             add_row('variants', $row_variant, $post_id);
         }
+
+        return $post_id;
     }
 
     /**
