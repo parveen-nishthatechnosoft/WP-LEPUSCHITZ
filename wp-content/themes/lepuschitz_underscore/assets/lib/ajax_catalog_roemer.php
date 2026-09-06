@@ -1,5 +1,5 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/wp-load.php');
+require_once dirname(__DIR__, 5) . '/wp-load.php';
 include_once('catalog.php');
 
 $lTool = '';

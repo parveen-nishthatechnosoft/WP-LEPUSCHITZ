@@ -1,5 +1,5 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/wp-load.php');
+require_once dirname(__DIR__, 5) . '/wp-load.php';
 include_once('catalog.php');
 
 $lTool = '';
@@ -40,6 +40,9 @@ function ImportCatalog() {
     }
 
     try {
+        if (!current_user_can('administrator')) {
+            throw new RuntimeException('Administrator permission is required.');
+        }
         $lCatalogId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
         if ($lCatalogId <= 0) {
             throw new InvalidArgumentException('Missing or invalid catalog ID.');

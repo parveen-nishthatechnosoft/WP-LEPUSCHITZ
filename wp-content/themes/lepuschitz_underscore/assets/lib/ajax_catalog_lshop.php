@@ -1,5 +1,5 @@
 <?php
-include_once ($_SERVER['DOCUMENT_ROOT'] . '/wp-load.php');
+require_once dirname(__DIR__, 5) . '/wp-load.php';
 include_once ('catalog.php');
 
 $lTool = '';
@@ -52,9 +52,11 @@ function UploadFile() {
     }
     $lZip->close();
 
-    // Save the file to temp folder
-    $lMandator = new LMandator(LMandator::LSHOP, LMandator::LSHOP_SCRAMBLED, LMandator::LSHOP_TYPE);
-    $lTempFileName = $lMandator->SaveFileToTempFile($lXlsxFile);
+    $lTempFileName = tempnam(sys_get_temp_dir(), 'lshop_import_');
+    if ($lTempFileName !== false && !move_uploaded_file($lXlsxFile, $lTempFileName)) {
+        unlink($lTempFileName);
+        $lTempFileName = false;
+    }
     if ($lTempFileName === false || !is_file($lTempFileName) || filesize($lTempFileName) === 0) {
         http_response_code(500);
         echo json_encode(['Success' => false, 'Message' => 'The server could not store the uploaded workbook.']);
@@ -63,7 +65,7 @@ function UploadFile() {
 
     $lResult = new stdClass();
     $lResult->Success = true;
-    $lResult->FileName = urlencode($lTempFileName);
+    $lResult->FileName = basename($lTempFileName);
 
     echo(json_encode($lResult));
 }
@@ -97,7 +99,15 @@ function ImportCatalog() {
             throw new RuntimeException('The uploaded file or catalogue ID is missing.');
         }
 
-        $lXlsxFile = $_GET['tempFile'];
+        $lTempFileToken = basename(rawurldecode((string) $_GET['tempFile']));
+        if (preg_match('/^lshop_import_[A-Za-z0-9]+$/', $lTempFileToken) !== 1) {
+            throw new RuntimeException('The temporary import-file token is invalid. Please upload it again.');
+        }
+        $lTemporaryDirectory = realpath(sys_get_temp_dir());
+        $lXlsxFile = realpath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $lTempFileToken);
+        if ($lXlsxFile === false || $lTemporaryDirectory === false || realpath(dirname($lXlsxFile)) !== $lTemporaryDirectory) {
+            throw new RuntimeException('The temporary import file is invalid. Please upload it again.');
+        }
         $lCatalogId = (int)$_GET['id'];
         $lMandator = new LMandator(LMandator::LSHOP, LMandator::LSHOP_SCRAMBLED, LMandator::LSHOP_TYPE);
         $lCatalog = new LCatalog('L-Shop Hauptkatalog', $lMandator, $lCatalogId);

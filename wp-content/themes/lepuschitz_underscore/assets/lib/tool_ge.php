@@ -51,7 +51,17 @@ if (isset($_GET['debug']))
 
         // upload finished, trigger importing with the returned temp file
         source.addEventListener("load", function (e) {
-            lResponse = JSON.parse(e.currentTarget.response);
+            var lResponse;
+            try {
+                lResponse = JSON.parse(e.currentTarget.response);
+            } catch (lError) {
+                document.getElementById("status1").textContent = "Der Upload wurde vom Server nicht korrekt beantwortet.";
+                return;
+            }
+            if (e.currentTarget.status < 200 || e.currentTarget.status >= 300 || !lResponse.Success) {
+                document.getElementById("status1").textContent = lResponse.Message || "Der Upload ist fehlgeschlagen.";
+                return;
+            }
             ImportCatalog(lResponse.FileName);
         });
 
@@ -87,6 +97,8 @@ if (isset($_GET['debug']))
             if (result.message === "TERMINATE") {
                 source.close();
                 document.getElementById("progress1").value = 1;
+            } else if (result.message.indexOf("ERROR:") === 0) {
+                source.close();
             }
         }, false);
 
