@@ -613,11 +613,11 @@ class LCatalogWriter {
     }
 
     /**
-     * @param string $aFileNameOrUrl
+     * @param string|null $aFileNameOrUrl
      * @param $aPostId
      * @return false|string Returns the file name or false if it fails
      */
-    private function DownloadFile(string $aFileNameOrUrl, $aPostId) {
+    private function DownloadFile(?string $aFileNameOrUrl, $aPostId) {
         if (!empty($aFileNameOrUrl)) {
             // Check if file is already in the filesystem
             if (file_exists($aFileNameOrUrl)) {
