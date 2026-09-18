@@ -7,13 +7,14 @@
  * @package lepuschitz
  */
 
-$lHost = $_SERVER['HTTP_HOST'];
-if ($lHost != 'www.lepuschitz-promotion.at') {
+$lHost = $_SERVER['HTTP_HOST'] ?? '';
+$lHost = is_string($lHost) ? strtolower(trim($lHost)) : '';
+if ($lHost !== 'www.lepuschitz-promotion.at') {
     // Internal dev server constants
     define('TARGET', 'DEV');
 } else {
     // Production server constants
-    define('TARGET', "LIVE");
+    define('TARGET', 'LIVE');
 }
 
 if (!defined('_S_VERSION')) {
@@ -203,6 +204,258 @@ function lepuschitz_scripts() {
 
 add_action('wp_enqueue_scripts', 'lepuschitz_scripts');
 
+function lepuschitz_get_catalog_hidden_categories($catalog_id = null) {
+    $hidden = array();
+    $catalog_ids = array();
+
+    if ($catalog_id) {
+        $catalog_ids[] = (int)$catalog_id;
+    } else {
+        $catalog_posts = get_posts(array(
+            'post_type' => 'catalog',
+            'post_status' => 'any',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ));
+        foreach ($catalog_posts as $catalog_post_id) {
+            $catalog_ids[] = (int)$catalog_post_id;
+        }
+    }
+
+    foreach ($catalog_ids as $catalog_post_id) {
+        $values = get_field('hidden_product_categories', $catalog_post_id);
+        if (empty($values)) {
+            continue;
+        }
+
+        foreach ((array)$values as $value) {
+            if ($value instanceof WP_Post) {
+                $value = $value->ID;
+            } elseif (is_array($value)) {
+                if (!empty($value['ID'])) {
+                    $value = $value['ID'];
+                } elseif (!empty($value['value'])) {
+                    $value = $value['value'];
+                }
+            } elseif (is_object($value)) {
+                if (isset($value->ID)) {
+                    $value = $value->ID;
+                } elseif (isset($value->value)) {
+                    $value = $value->value;
+                } elseif (isset($value->post_id)) {
+                    $value = $value->post_id;
+                } else {
+                    continue;
+                }
+            }
+
+            if (is_numeric($value)) {
+                $hidden[] = (int)$value;
+                continue;
+            }
+
+            if (is_object($value)) {
+                continue;
+            }
+
+            $normalized = strtolower(trim((string)$value));
+            if ($normalized !== '') {
+                $hidden[] = $normalized;
+            }
+        }
+    }
+
+    return array_values(array_unique($hidden));
+}
+
+function lepuschitz_is_hidden_catalog_category($category_name, $catalog_id = null) {
+    if (empty($category_name)) {
+        return false;
+    }
+
+    $matches = lepuschitz_get_catalog_hidden_categories($catalog_id);
+    if (empty($matches)) {
+        return false;
+    }
+
+    $normalized_name = strtolower(trim((string)$category_name));
+    if ($normalized_name === '') {
+        return false;
+    }
+
+    foreach ($matches as $match) {
+        if ($match instanceof WP_Post) {
+            $match = $match->ID;
+        } elseif (is_object($match)) {
+            if (isset($match->ID)) {
+                $match = $match->ID;
+            } elseif (isset($match->value)) {
+                $match = $match->value;
+            } elseif (isset($match->post_id)) {
+                $match = $match->post_id;
+            } else {
+                continue;
+            }
+        }
+
+        if (is_int($match) || is_numeric($match)) {
+            $category_post = get_post((int)$match);
+            if ($category_post && strtolower($category_post->post_title) === $normalized_name) {
+                return true;
+            }
+
+            if ($category_post && strtolower($category_post->post_name) === $normalized_name) {
+                return true;
+            }
+
+            continue;
+        }
+
+        if (is_object($match)) {
+            continue;
+        }
+
+        if (strtolower((string)$match) === $normalized_name) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function lepuschitz_get_hidden_category_ids() {
+    $hidden = array();
+    $catalog_hidden = lepuschitz_get_catalog_hidden_categories();
+
+    foreach ($catalog_hidden as $value) {
+        if (is_numeric($value)) {
+            $hidden[] = (int)$value;
+        }
+    }
+
+    if (empty($hidden)) {
+        $category_names = array();
+        foreach (lepuschitz_get_catalog_hidden_categories() as $value) {
+            if (!is_numeric($value)) {
+                $category_names[] = strtolower(trim((string)$value));
+            }
+        }
+
+        if (!empty($category_names)) {
+            $category_posts = get_posts(array(
+                'post_type' => 'product_category',
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'fields' => 'ids',
+                'suppress_filters' => true,
+            ));
+
+            foreach ($category_posts as $category_id) {
+                $category_title = strtolower(get_the_title($category_id));
+                $category_slug = strtolower(get_post_field('post_name', $category_id));
+                if (in_array($category_title, $category_names, true) || in_array($category_slug, $category_names, true)) {
+                    $hidden[] = (int)$category_id;
+                }
+            }
+        }
+    }
+
+    return array_values(array_unique(array_filter($hidden, 'is_numeric')));
+}
+
+function lepuschitz_exclude_hidden_categories_from_frontend($query) {
+    static $is_running = false;
+
+    if ($is_running) {
+        return;
+    }
+
+    if (is_admin() || !$query->is_main_query() && $query->get('post_type') !== 'product_category' && $query->get('post_type') !== 'product_subcategory' && $query->get('post_type') !== 'product') {
+        return;
+    }
+
+    $is_running = true;
+
+    try {
+        $post_type = $query->get('post_type');
+        if (empty($post_type)) {
+            return;
+        }
+
+        $hidden_category_ids = lepuschitz_get_hidden_category_ids();
+        $hidden_subcategory_ids = array();
+
+        if (!empty($hidden_category_ids)) {
+            $subcategories = get_posts(array(
+                'post_type' => 'product_subcategory',
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'fields' => 'ids',
+                'meta_key' => 'parent',
+                'meta_value' => $hidden_category_ids,
+                'meta_compare' => 'IN',
+                'suppress_filters' => true,
+            ));
+
+            foreach ($subcategories as $subcategory_id) {
+                $hidden_subcategory_ids[] = (int)$subcategory_id;
+            }
+        }
+
+        if ($post_type === 'product_category') {
+            if (!empty($hidden_category_ids)) {
+                $query->set('post__not_in', array_merge((array)$query->get('post__not_in'), $hidden_category_ids));
+            }
+            return;
+        }
+
+        if ($post_type === 'product_subcategory') {
+            if (!empty($hidden_category_ids)) {
+                $meta_query = $query->get('meta_query');
+                if (!is_array($meta_query)) {
+                    $meta_query = array();
+                }
+                $meta_query[] = array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'parent',
+                        'value' => $hidden_category_ids,
+                        'compare' => 'NOT IN',
+                    ),
+                );
+                $query->set('meta_query', $meta_query);
+            }
+
+            if (!empty($hidden_subcategory_ids)) {
+                $query->set('post__not_in', array_merge((array)$query->get('post__not_in'), $hidden_subcategory_ids));
+            }
+            return;
+        }
+
+        if ($post_type === 'product') {
+            if (!empty($hidden_subcategory_ids)) {
+                $meta_query = $query->get('meta_query');
+                if (!is_array($meta_query)) {
+                    $meta_query = array();
+                }
+                $meta_query[] = array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'parent',
+                        'value' => $hidden_subcategory_ids,
+                        'compare' => 'NOT IN',
+                    ),
+                );
+                $query->set('meta_query', $meta_query);
+            }
+        }
+    } finally {
+        $is_running = false;
+    }
+}
+
+add_action('pre_get_posts', 'lepuschitz_exclude_hidden_categories_from_frontend');
+
 /**
  * Implement the Custom Header feature.
  */
@@ -367,6 +620,61 @@ function prefix_parse_filter($query) {
         $query->query_vars['meta_key'] = 'parent';
         $query->query_vars['meta_value'] = $lCategoryId;
         $query->query_vars['meta_compare'] = '=';
+    }
+}
+
+if (function_exists('acf_add_local_field_group')) {
+    add_action('acf/init', 'lepuschitz_register_catalog_hidden_categories_field_group');
+    function lepuschitz_register_catalog_hidden_categories_field_group() {
+        acf_add_local_field_group(array(
+            'key' => 'group_catalog_hidden_categories',
+            'title' => 'Catalog Settings',
+            'fields' => array(
+                array(
+                    'key' => 'field_catalog_hidden_product_categories',
+                    'label' => 'Hidden product categories',
+                    'name' => 'hidden_product_categories',
+                    'type' => 'relationship',
+                    'instructions' => 'Select product categories that should be hidden from the frontend for this catalog.',
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array(
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'post_type' => array(
+                        0 => 'product_category',
+                    ),
+                    'taxonomy' => '',
+                    'filters' => array(
+                        0 => 'search',
+                    ),
+                    'elements' => '',
+                    'min' => '',
+                    'max' => '',
+                    'return_format' => 'object',
+                    'ui' => 1,
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'catalog',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+        ));
     }
 }
 

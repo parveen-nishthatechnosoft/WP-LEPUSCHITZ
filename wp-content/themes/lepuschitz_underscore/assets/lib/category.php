@@ -55,6 +55,14 @@ class LCategory {
     /**
      * Read the rates out of the database if possible
      */
+    private static function ReadRateValue(array $aRate, string $aKey, $aDefault = 0) {
+        if (!array_key_exists($aKey, $aRate) || $aRate[$aKey] === null || $aRate[$aKey] === '') {
+            return $aDefault;
+        }
+
+        return $aRate[$aKey];
+    }
+
     public function ReadAndaPrices() {
         if (!$this->MarkupsDownsRead) {
             // Get the price rates from the database
@@ -73,7 +81,15 @@ class LCategory {
                 $lRates = get_field('anda_pricerates', get_the_ID());
                 if (is_array($lRates)) {
                     foreach ($lRates as $lRate) {
-                        $this->MarkupsDowns[] = new LMarkupDown((float)$lRate['anda_pricerate_markup'], (int)$lRate['anda_pricerate_from'], (int)$lRate['anda_pricerate_to']);
+                        if (!is_array($lRate)) {
+                            continue;
+                        }
+
+                        $this->MarkupsDowns[] = new LMarkupDown(
+                            (float) self::ReadRateValue($lRate, 'anda_pricerate_markup', 0.0),
+                            (int) self::ReadRateValue($lRate, 'anda_pricerate_from', 0),
+                            (int) self::ReadRateValue($lRate, 'anda_pricerate_to', 0)
+                        );
                     }
                 }
             }
@@ -150,9 +166,17 @@ class LCategories {
 
         // Try to load global ANDA rates
         $lRates = get_field('anda_pricerates', 'option');
-        if (is_array($lRates) || sizeof($lRates) > 0) {
+        if (is_array($lRates) && count($lRates) > 0) {
             foreach ($lRates as $lRate) {
-                $this->GlobalAndaRates[] = new LMarkupDown((float)$lRate['anda_pricerate_markup'], (int)$lRate['anda_pricerate_from'], (int)$lRate['anda_pricerate_to']);
+                if (!is_array($lRate)) {
+                    continue;
+                }
+
+                $this->GlobalAndaRates[] = new LMarkupDown(
+                    (float) LCategory::ReadRateValue($lRate, 'anda_pricerate_markup', 0.0),
+                    (int) LCategory::ReadRateValue($lRate, 'anda_pricerate_from', 0),
+                    (int) LCategory::ReadRateValue($lRate, 'anda_pricerate_to', 0)
+                );
             }
         }
     }

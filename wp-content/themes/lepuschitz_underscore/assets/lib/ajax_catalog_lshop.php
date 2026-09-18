@@ -29,9 +29,23 @@ function UploadFile() {
         echo json_encode(['Success' => false, 'Message' => 'Administrator permission is required.']);
         return;
     }
-    if (!isset($_FILES['xlsx']) || $_FILES['xlsx']['error'] !== UPLOAD_ERR_OK) {
+    if (!isset($_FILES['xlsx'])) {
         http_response_code(400);
-        echo json_encode(['Success' => false, 'Message' => 'The XLSX upload did not complete successfully.']);
+        echo json_encode(['Success' => false, 'Message' => 'No XLSX file was received. The request may exceed the server upload limit.']);
+        return;
+    }
+    if ($_FILES['xlsx']['error'] !== UPLOAD_ERR_OK) {
+        $lUploadErrors = array(
+            UPLOAD_ERR_INI_SIZE => 'The XLSX file exceeds the server upload limit.',
+            UPLOAD_ERR_FORM_SIZE => 'The XLSX file exceeds the form upload limit.',
+            UPLOAD_ERR_PARTIAL => 'The XLSX file was only partially uploaded. Please try again.',
+            UPLOAD_ERR_NO_FILE => 'No XLSX file was selected.',
+            UPLOAD_ERR_NO_TMP_DIR => 'The server upload temporary directory is unavailable.',
+            UPLOAD_ERR_CANT_WRITE => 'The server could not write the uploaded XLSX file.',
+            UPLOAD_ERR_EXTENSION => 'A server extension stopped the XLSX upload.'
+        );
+        http_response_code(400);
+        echo json_encode(['Success' => false, 'Message' => $lUploadErrors[$_FILES['xlsx']['error']] ?? 'The XLSX upload did not complete successfully.']);
         return;
     }
 

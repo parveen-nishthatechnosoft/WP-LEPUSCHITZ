@@ -106,6 +106,28 @@ class LAndaCatalogReader extends LCatalogReader {
             // Get the product title
             $lProductName = (string)$lProductXml->name . (!empty((string)$lProductXml->designName) ? " '" . (string)$lProductXml->designName . "'" : '');
 
+            // Get the categories
+            $lCategories = [];
+            foreach ($lProductXml->categories->children() as $lCategoryXml) {
+                $lCategoryLevel = (string)$lCategoryXml->level;
+                $lCategoryId = (int)$lCategoryXml->externalId;
+                $lCategoryName = (string)$lCategoryXml->name;
+                $lCategories[$lCategoryLevel] = new LCategory($lCategoryId, $lCategoryName);
+            }
+            ksort($lCategories);
+
+            if (!isset($lCategories[1])) {
+                continue;
+            }
+
+            if (lepuschitz_is_hidden_catalog_category($lCategories[1]->Name, $aCatalog->Id)) {
+                continue;
+            }
+
+            if (isset($lCategories[2]) && lepuschitz_is_hidden_catalog_category($lCategories[2]->Name, $aCatalog->Id)) {
+                continue;
+            }
+
             // Add or find the product in the list
             $lProductIsNew = !$aCatalog->Products->ExistsProductCode($lProductCode);
             $lProduct = $aCatalog->Products->AddProduct($lProductCode, $lProductName);
@@ -119,16 +141,6 @@ class LAndaCatalogReader extends LCatalogReader {
 
             // And add additional information if new or already exists
             $lProduct->AddColorWithImage((string)$lProductXml->primaryColor, (string)$lProductXml->primaryImage, $lFullItemNumber);
-
-            // Get the categories
-            $lCategories = [];
-            foreach ($lProductXml->categories->children() as $lCategoryXml) {
-                $lCategoryLevel = (string)$lCategoryXml->level;
-                $lCategoryId = (int)$lCategoryXml->externalId;
-                $lCategoryName = (string)$lCategoryXml->name;
-                $lCategories[$lCategoryLevel] = new LCategory($lCategoryId, $lCategoryName);
-            }
-            ksort($lCategories);
 
             $lCategoryL1 = $aCatalog->Categories->AddCategory($lCategories[1]->Id, $lCategories[1]->Name);
             $lCategoryL1->ReadAndaPrices();
